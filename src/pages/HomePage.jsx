@@ -1,72 +1,145 @@
-﻿import { ArrowForward } from '@mui/icons-material'
+import { ArrowForward, NorthEast, TrendingUp } from '@mui/icons-material'
 import { Box, Button, Card, CardContent, Chip, Grid, Stack, Typography } from '@mui/material'
+import { useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
+import RevealOnScroll from '../components/motion/RevealOnScroll'
+
+const focusAreas = [
+  {
+    title: 'Product-Ready Frontends',
+    description: 'Component systems that scale with feature velocity while keeping UX consistent.',
+  },
+  {
+    title: 'Performance Discipline',
+    description: 'Fast interactions, lean bundles, and measurable web-vitals improvements.',
+  },
+  {
+    title: 'Cross-Team Execution',
+    description: 'Tight handoff between product, design, and engineering from idea to launch.',
+  },
+]
+
+const impactStats = [
+  { label: 'Projects shipped', value: '12+' },
+  { label: 'Primary stack', value: 'React + MUI' },
+  { label: 'Focus areas', value: 'UI, UX, DX' },
+]
 
 function HomePage() {
+  const [spotlight, setSpotlight] = useState({ x: 50, y: 30 })
+
   return (
     <Stack spacing={4}>
-      <Card elevation={0} sx={{ border: '1px solid', borderColor: 'divider' }}>
-        <CardContent sx={{ p: { xs: 3, md: 5 } }}>
-          <Stack spacing={3}>
-            <Chip label="Open To Work" color="primary" sx={{ width: 'fit-content' }} />
-            <Typography variant="h2" component="h2" sx={{ fontSize: { xs: '2rem', md: '3rem' } }}>
-              Building clean, scalable web experiences.
-            </Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 760 }}>
-              I am a frontend-focused developer who builds modern, performant applications with React and
-              component-driven architecture.
-            </Typography>
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-              <Button
-                component={RouterLink}
-                to="/projects"
-                variant="contained"
-                endIcon={<ArrowForward />}
-              >
-                View Projects
-              </Button>
-              <Button component={RouterLink} to="/contact" variant="outlined">
-                Contact Me
-              </Button>
-            </Stack>
-          </Stack>
-        </CardContent>
-      </Card>
+      <RevealOnScroll delay={30}>
+        <Card
+          elevation={0}
+          onMouseMove={(event) => {
+            const rect = event.currentTarget.getBoundingClientRect()
+            const x = ((event.clientX - rect.left) / rect.width) * 100
+            const y = ((event.clientY - rect.top) / rect.height) * 100
+            setSpotlight({ x, y })
+          }}
+          sx={(theme) => ({
+            overflow: 'hidden',
+            background:
+              theme.palette.mode === 'dark'
+                ? `radial-gradient(circle at ${spotlight.x}% ${spotlight.y}%, rgba(45,212,191,0.2) 0%, rgba(45,212,191,0) 34%), linear-gradient(132deg, rgba(15,23,42,0.9) 0%, rgba(17,24,39,0.86) 38%, rgba(15,118,110,0.22) 100%)`
+                : `radial-gradient(circle at ${spotlight.x}% ${spotlight.y}%, rgba(15,118,110,0.14) 0%, rgba(15,118,110,0) 30%), linear-gradient(130deg, rgba(15,118,110,0.14) 0%, rgba(255,255,255,0.94) 40%, rgba(249,115,22,0.12) 100%)`,
+          })}
+        >
+          <CardContent sx={{ p: { xs: 3, md: 5 } }}>
+            <Grid container spacing={4} alignItems="center">
+              <Grid size={{ xs: 12, md: 8 }}>
+                <Stack spacing={2.5}>
+                  <Typography
+                    variant="overline"
+                    sx={{ letterSpacing: '0.16em', color: 'text.secondary', fontWeight: 700 }}
+                  >
+                    Solomon Santos
+                  </Typography>
+                  <Chip label="Open To Work" color="primary" sx={{ width: 'fit-content' }} />
+                  <Typography variant="h2" component="h2" sx={{ fontSize: { xs: '2.2rem', md: '3.25rem' } }}>
+                    Design-minded frontend engineering with production-level rigor.
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 700 }}>
+                    I build modern web interfaces that feel polished, stay performant, and are easy for teams to
+                    evolve over time.
+                  </Typography>
+                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
+                    <Button component={RouterLink} to="/projects" variant="contained" endIcon={<ArrowForward />}>
+                      Explore Projects
+                    </Button>
+                    <Button component={RouterLink} to="/contact" variant="outlined" endIcon={<NorthEast />}>
+                      Start A Conversation
+                    </Button>
+                  </Stack>
+                </Stack>
+              </Grid>
 
-      <Box>
-        <Typography variant="h5" sx={{ mb: 2 }}>
-          What I Focus On
-        </Typography>
-        <Grid container spacing={2}>
-          {[
-            {
-              title: 'Frontend Engineering',
-              description: 'Responsive UI development with React, reusable components, and accessibility-first patterns.',
-            },
-            {
-              title: 'Performance',
-              description: 'Fast page loads, optimized bundles, and practical improvements based on real metrics.',
-            },
-            {
-              title: 'Product Collaboration',
-              description: 'Working closely with design and product teams to ship clear, maintainable features.',
-            },
-          ].map((item) => (
-            <Grid key={item.title} size={{ xs: 12, md: 4 }}>
-              <Card elevation={0} sx={{ height: '100%', border: '1px solid', borderColor: 'divider' }}>
-                <CardContent>
-                  <Typography variant="h6" sx={{ mb: 1 }}>
-                    {item.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {item.description}
-                  </Typography>
-                </CardContent>
-              </Card>
+              <Grid size={{ xs: 12, md: 4 }}>
+                <Card
+                  elevation={0}
+                  sx={(theme) => ({
+                    bgcolor:
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(15, 23, 42, 0.7)'
+                        : 'rgba(255, 255, 255, 0.88)',
+                    borderColor:
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(148, 163, 184, 0.24)'
+                        : 'rgba(15, 23, 42, 0.08)',
+                  })}
+                >
+                  <CardContent>
+                    <Stack spacing={1.5}>
+                      <Stack direction="row" spacing={1} alignItems="center">
+                        <TrendingUp color="primary" fontSize="small" />
+                        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                          Snapshot
+                        </Typography>
+                      </Stack>
+                      {impactStats.map((item) => (
+                        <Box key={item.label}>
+                          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                            {item.label}
+                          </Typography>
+                          <Typography variant="h6">{item.value}</Typography>
+                        </Box>
+                      ))}
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </Grid>
             </Grid>
-          ))}
-        </Grid>
-      </Box>
+          </CardContent>
+        </Card>
+      </RevealOnScroll>
+
+      <RevealOnScroll delay={100}>
+        <Box>
+          <Typography variant="h5" sx={{ mb: 2 }}>
+            How I Add Value
+          </Typography>
+          <Grid container spacing={2}>
+            {focusAreas.map((item, index) => (
+              <Grid key={item.title} size={{ xs: 12, md: 4 }}>
+                <RevealOnScroll delay={140 + index * 70}>
+                  <Card elevation={0} sx={{ height: '100%' }}>
+                    <CardContent>
+                      <Typography variant="h6" sx={{ mb: 1 }}>
+                        {item.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {item.description}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </RevealOnScroll>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      </RevealOnScroll>
     </Stack>
   )
 }
