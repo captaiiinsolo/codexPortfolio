@@ -51,9 +51,9 @@ function FlipAction({ side = 'right', reversed = false, onToggle }) {
     <Box
       sx={{
         position: 'absolute',
-        left: isLeft ? 16 : 'auto',
-        right: isLeft ? 'auto' : 16,
-        bottom: 16,
+        left: isLeft ? 12 : 'auto',
+        right: isLeft ? 'auto' : 12,
+        bottom: 12,
         display: 'flex',
         alignItems: 'center',
         flexDirection: isLeft ? 'row-reverse' : 'row',
@@ -64,17 +64,17 @@ function FlipAction({ side = 'right', reversed = false, onToggle }) {
         sx={(theme) => ({
           mr: isLeft ? 0 : 1,
           ml: isLeft ? 1 : 0,
-          px: 1.2,
-          py: 0.5,
+          px: 1.1,
+          py: 0.45,
           borderRadius: 99,
           border: '1px solid',
           borderColor: 'divider',
           bgcolor: theme.palette.mode === 'dark' ? 'rgba(15, 23, 42, 0.96)' : 'rgba(255, 255, 255, 0.96)',
           color: 'text.secondary',
-          fontSize: '0.74rem',
+          fontSize: { xs: '0.66rem', sm: '0.74rem' },
           fontWeight: 600,
           whiteSpace: 'nowrap',
-          opacity: 0,
+          opacity: { xs: 0, md: 0 },
           transform: isLeft ? 'translateX(-14px)' : 'translateX(14px)',
           filter: 'blur(1.5px)',
           transition: 'opacity 260ms ease, transform 260ms ease, filter 260ms ease',
@@ -119,19 +119,19 @@ function ProjectsPage() {
   }
 
   return (
-    <Stack spacing={3}>
+    <Stack spacing={{ xs: 2.25, md: 3 }}>
       <RevealOnScroll delay={30}>
         <Box>
-          <Typography variant="h3" component="h2" sx={{ fontSize: { xs: '2rem', md: '2.6rem' }, mb: 1 }}>
+          <Typography variant="h3" component="h2" sx={{ fontSize: { xs: '1.75rem', md: '2.6rem' }, mb: 1 }}>
             Selected Work
           </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 760 }}>
+          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 760, fontSize: { xs: '0.98rem', md: '1rem' } }}>
             A few examples of how I approach product decisions, frontend architecture, and delivery quality.
           </Typography>
         </Box>
       </RevealOnScroll>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={{ xs: 1.5, md: 2 }}>
         {projects.map((project, index) => {
           const isFlipped = Boolean(flipped[project.title])
 
@@ -142,7 +142,7 @@ function ProjectsPage() {
                   <Box
                     sx={{
                       position: 'relative',
-                      minHeight: 360,
+                      minHeight: { xs: 332, md: 360 },
                       outline: 'none',
                       borderRadius: 2,
                       '&:hover .flip-hint, &:focus-within .flip-hint': {
@@ -174,10 +174,10 @@ function ProjectsPage() {
                           },
                         }}
                       >
-                        <CardContent sx={{ p: 3, height: '100%', position: 'relative', pb: 7 }}>
-                          <Stack spacing={2}>
+                        <CardContent sx={{ p: { xs: 2.25, md: 3 }, height: '100%', position: 'relative', pb: 7 }}>
+                          <Stack spacing={{ xs: 1.5, md: 2 }}>
                             <Box>
-                              <Typography variant="h5" sx={{ mb: 0.5 }}>
+                              <Typography variant="h5" sx={{ mb: 0.5, fontSize: { xs: '1.6rem', md: '2rem' } }}>
                                 {project.title}
                               </Typography>
                               <Typography variant="body2" color="text.secondary">
@@ -185,7 +185,7 @@ function ProjectsPage() {
                               </Typography>
                             </Box>
 
-                            <Typography variant="body2" color="text.secondary">
+                            <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.93rem', md: '0.95rem' } }}>
                               {project.summary}
                             </Typography>
 
@@ -211,17 +211,17 @@ function ProjectsPage() {
                           },
                         }}
                       >
-                        <CardContent sx={{ p: 3, height: '100%', position: 'relative', pb: 7 }}>
-                          <Stack spacing={1.25}>
-                            <Typography variant="h6" sx={{ color: 'primary.main' }}>
+                        <CardContent sx={{ p: { xs: 2.25, md: 3 }, height: '100%', position: 'relative', pb: 7 }}>
+                          <Stack spacing={{ xs: 1, md: 1.25 }}>
+                            <Typography variant="h6" sx={{ color: 'primary.main', fontSize: { xs: '1.1rem', md: '1.2rem' } }}>
                               {project.title}
                             </Typography>
-                            <Typography variant="body2" color="text.secondary">
+                            <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.92rem', md: '0.95rem' } }}>
                               {project.detail}
                             </Typography>
                             <Stack spacing={0.75} sx={{ pt: 0.5 }}>
                               {project.outcomes.map((outcome) => (
-                                <Typography key={outcome} variant="body2" color="text.secondary">
+                                <Typography key={outcome} variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.88rem', md: '0.92rem' } }}>
                                   - {outcome}
                                 </Typography>
                               ))}
@@ -242,7 +242,7 @@ function ProjectsPage() {
 
       <RevealOnScroll delay={260}>
         <Card elevation={0}>
-          <CardContent sx={{ p: 3 }}>
+          <CardContent sx={{ p: { xs: 2.25, md: 3 } }}>
             <Stack
               direction={{ xs: 'column', sm: 'row' }}
               spacing={2}
