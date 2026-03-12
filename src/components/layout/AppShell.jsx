@@ -1,5 +1,6 @@
-import { DarkMode, LightMode } from '@mui/icons-material'
-import { Box, Button, Container, IconButton, Stack, Tooltip, Typography } from '@mui/material'
+import { DarkMode, LightMode, Menu } from '@mui/icons-material'
+import { useEffect, useState } from 'react'
+import { Box, Button, Container, Drawer, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 
 const navItems = [
@@ -56,6 +57,11 @@ function getNavButtonSx(mode) {
 function AppShell({ mode, onToggleColorMode }) {
   const location = useLocation()
   const navButtonSx = getNavButtonSx(mode)
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
+
+  useEffect(() => {
+    setMobileNavOpen(false)
+  }, [location.pathname])
 
   return (
     <>
@@ -63,33 +69,44 @@ function AppShell({ mode, onToggleColorMode }) {
         <Stack spacing={3}>
           <Box
             sx={{
-              borderRadius: 3,
-              border: '1px solid',
+              borderRadius: { xs: 0, md: 3 },
+              border: { xs: 'none', md: '1px solid' },
               borderColor: 'divider',
-              bgcolor: mode === 'dark' ? 'rgba(15, 23, 42, 0.74)' : 'rgba(255, 255, 255, 0.74)',
-              backdropFilter: 'blur(14px)',
-              p: { xs: 1.5, md: 2 },
-              boxShadow:
-                mode === 'dark'
-                  ? '0 18px 40px -30px rgba(2, 6, 23, 0.95)'
-                  : '0 18px 40px -30px rgba(15, 23, 42, 0.65)',
+              bgcolor: {
+                xs: 'transparent',
+                md: mode === 'dark' ? 'rgba(15, 23, 42, 0.74)' : 'rgba(255, 255, 255, 0.74)',
+              },
+              backdropFilter: { xs: 'none', md: 'blur(14px)' },
+              p: { xs: 0.5, md: 2 },
+              boxShadow: {
+                xs: 'none',
+                md:
+                  mode === 'dark'
+                    ? '0 18px 40px -30px rgba(2, 6, 23, 0.95)'
+                    : '0 18px 40px -30px rgba(15, 23, 42, 0.65)',
+              },
             }}
           >
-            <Box
-              sx={{
-                overflowX: { xs: 'auto', md: 'visible' },
-                pb: 0.5,
-                scrollbarWidth: 'none',
-                '&::-webkit-scrollbar': { display: 'none' },
-              }}
-            >
-              <Stack
-                direction="row"
-                spacing={0.75}
-                useFlexGap
-                flexWrap={{ xs: 'nowrap', md: 'wrap' }}
-                sx={{ width: 'max-content', minWidth: '100%' }}
-              >
+            <Box sx={{ display: { xs: 'flex', md: 'none' }, justifyContent: 'flex-start' }}>
+              <Tooltip title="Open menu">
+                <IconButton
+                  onClick={() => setMobileNavOpen(true)}
+                  aria-label="Open navigation menu"
+                  sx={{
+                    width: 44,
+                    height: 44,
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    color: 'text.primary',
+                  }}
+                >
+                  <Menu />
+                </IconButton>
+              </Tooltip>
+            </Box>
+
+            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+              <Stack direction="row" spacing={0.75} useFlexGap flexWrap="wrap">
                 {navItems.map((item) => (
                   <Button
                     key={item.to}
@@ -117,6 +134,49 @@ function AppShell({ mode, onToggleColorMode }) {
           </Typography>
         </Stack>
       </Container>
+
+      <Drawer
+        anchor="left"
+        open={mobileNavOpen}
+        onClose={() => setMobileNavOpen(false)}
+        PaperProps={{
+          sx: {
+            width: 280,
+            p: 2,
+            bgcolor: mode === 'dark' ? 'rgba(15, 23, 42, 0.96)' : 'rgba(255, 255, 255, 0.98)',
+            backdropFilter: 'blur(18px)',
+            borderRight: '1px solid',
+            borderColor: 'divider',
+          },
+        }}
+      >
+        <Stack spacing={1} sx={{ pt: 1 }}>
+          <Typography variant="overline" sx={{ px: 1, letterSpacing: '0.14em', color: 'text.secondary', fontWeight: 700 }}>
+            Navigation
+          </Typography>
+          {navItems.map((item) => (
+            <Button
+              key={item.to}
+              component={NavLink}
+              to={item.to}
+              onMouseEnter={() => prefetchRoute(item.to)}
+              onFocus={() => prefetchRoute(item.to)}
+              onTouchStart={() => prefetchRoute(item.to)}
+              className={({ isActive }) => (isActive ? 'active' : '')}
+              sx={{
+                ...navButtonSx,
+                justifyContent: 'flex-start',
+                width: '100%',
+                minHeight: 44,
+                px: 1.5,
+                borderRadius: 2,
+              }}
+            >
+              {item.label}
+            </Button>
+          ))}
+        </Stack>
+      </Drawer>
 
       <Tooltip title={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
         <IconButton
@@ -149,3 +209,5 @@ function AppShell({ mode, onToggleColorMode }) {
 }
 
 export default AppShell
+
+
