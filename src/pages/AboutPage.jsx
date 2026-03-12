@@ -6,25 +6,25 @@ import RevealOnScroll from '../components/motion/RevealOnScroll'
 const strengths = [
   {
     icon: <DesignServices color="primary" fontSize="small" />,
-    title: 'Interface Craft',
-    description: 'Building clear, responsive interfaces with reusable component patterns and visual consistency.',
+    title: 'Secure UX Mindset',
+    description: 'Designing interfaces that promote clarity, trustworthy interactions, and fewer user-facing security mistakes.',
   },
   {
     icon: <Bolt color="primary" fontSize="small" />,
-    title: 'Execution Speed',
-    description: 'Breaking down work into focused milestones so teams can ship quickly with lower risk.',
+    title: 'Hands-On Technical Growth',
+    description: 'Growing across cloud, web application, and security concepts through projects, certifications, and iterative practice.',
   },
   {
     icon: <Groups color="primary" fontSize="small" />,
-    title: 'Collaboration',
-    description: 'Aligning product goals, design intent, and technical constraints into practical decisions.',
+    title: 'Cross-Functional Value',
+    description: 'Connecting usability, implementation details, and operational thinking so teams can ship with more confidence.',
   },
 ]
 
 const workflow = [
-  'Align on user outcomes before implementation.',
-  'Build with scalable patterns from day one.',
-  'Measure quality through performance and usability.',
+  'Start with risk, user trust, and the outcome the system needs to protect.',
+  'Build with maintainable patterns so features can evolve without increasing fragility.',
+  'Measure quality through usability, reliability, and secure-by-default behavior.',
 ]
 
 function AboutPage() {
@@ -50,11 +50,12 @@ function AboutPage() {
                 component="h2"
                 sx={{ fontSize: { xs: '2rem', md: '2.6rem' }, maxWidth: 920, lineHeight: { xs: 1.12, md: 1.08 } }}
               >
-                I build thoughtful digital experiences that are clean, fast, and maintainable.
+                I am pivoting into cybersecurity while bringing a practical full-stack web development background.
               </Typography>
               <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 760, fontSize: { xs: '1rem', md: '1.03rem' } }}>
-                I am a frontend developer focused on shipping modern web interfaces with React. I care about UI
-                quality, accessibility, and scalable code structures while keeping product outcomes at the center.
+                My background in frontend development taught me how applications are built, how users interact with
+                them, and where reliability breaks down. I am now applying that foundation toward cybersecurity
+                opportunities, with full-stack development remaining a strong secondary focus.
               </Typography>
               <Box>
                 <Button component={RouterLink} to="/contact" variant="outlined" endIcon={<NorthEast />} sx={{ minHeight: 48, px: 2.25 }}>
@@ -71,7 +72,7 @@ function AboutPage() {
           <Typography variant="overline" sx={{ letterSpacing: '0.14em', color: 'text.secondary', fontWeight: 700 }}>
             Strengths
           </Typography>
-          <Typography variant="h5">What I Focus On</Typography>
+          <Typography variant="h5">What I Bring To Security-Focused Teams</Typography>
         </Stack>
         <Grid container spacing={2}>
           {strengths.map((item, index) => (
@@ -118,7 +119,7 @@ function AboutPage() {
               <Typography variant="overline" sx={{ letterSpacing: '0.14em', color: 'text.secondary', fontWeight: 700 }}>
                 Process
               </Typography>
-              <Typography variant="h6">How I Work</Typography>
+              <Typography variant="h6">How I Approach Technical Work</Typography>
             </Stack>
             <Stack spacing={1.75}>
               {workflow.map((step, index) => (

@@ -6,31 +6,31 @@ import RevealOnScroll from '../components/motion/RevealOnScroll'
 
 const projects = [
   {
-    title: 'Portfolio Platform Refresh',
-    role: 'Frontend Engineer',
-    summary: 'Redesigned information architecture and interaction model to increase clarity and conversion intent.',
-    outcomes: ['Improved content scan-ability', 'Cleaner responsive breakpoints', 'Higher visual consistency'],
+    title: 'Security-Focused Portfolio Refresh',
+    role: 'Builder / Frontend Developer',
+    summary: 'Reframed site architecture and messaging to present a cybersecurity-first profile with clearer professional intent.',
+    outcomes: ['Sharper role alignment', 'Cleaner information hierarchy', 'More credible technical positioning'],
     stack: ['React', 'MUI', 'Vite'],
     detail:
-      'Focused on hierarchy, motion discipline, and conversion-oriented CTA placement while preserving maintainability.',
+      'Focused on trust-building copy, maintainable UI structure, and a presentation that supports cybersecurity hiring conversations.',
   },
   {
-    title: 'Component System Foundation',
-    role: 'UI Architecture Lead',
-    summary: 'Created reusable UI primitives and shared patterns to ship faster with less visual drift.',
-    outcomes: ['Reduced duplicate components', 'Faster feature implementation', 'More predictable QA'],
-    stack: ['Design Tokens', 'Story-driven development', 'Accessibility'],
+    title: 'Reusable Interface System',
+    role: 'Frontend Engineer',
+    summary: 'Created reusable UI patterns that improve consistency, maintainability, and safer iteration across the site.',
+    outcomes: ['Reduced duplicate patterns', 'More predictable updates', 'Stronger accessibility baseline'],
+    stack: ['Component Architecture', 'Accessibility', 'Design Systems'],
     detail:
-      'Defined foundational component APIs and documentation-first patterns to align design and engineering output.',
+      'This work reflects the discipline needed in security-conscious environments where consistency and reduced complexity matter.',
   },
   {
-    title: 'Contact Funnel Optimization',
-    role: 'Product Engineer',
-    summary: 'Built a streamlined inquiry flow with validation and reliable delivery integration.',
-    outcomes: ['Lower form drop-off risk', 'Clear submission feedback', 'Scheduling CTA integration'],
-    stack: ['EmailJS', 'Form Validation', 'Conversion UX'],
+    title: 'Trustworthy Contact Workflow',
+    role: 'Full-Stack Oriented Web Developer',
+    summary: 'Built a contact flow with validation, clearer feedback, and dependable message delivery integration.',
+    outcomes: ['Better form validation', 'Clearer success and error handling', 'Improved user confidence'],
+    stack: ['EmailJS', 'Form Validation', 'UX Reliability'],
     detail:
-      'Introduced progressive validation and clear success/error states to reduce friction and improve user confidence.',
+      'The form work emphasizes input validation, dependable processing, and user trust, all of which connect closely to secure application thinking.',
   },
 ]
 
@@ -126,7 +126,7 @@ function ProjectsPage() {
             Selected Work
           </Typography>
           <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 760, fontSize: { xs: '0.98rem', md: '1rem' } }}>
-            A few examples of how I approach product decisions, frontend architecture, and delivery quality.
+            A few examples of how I think about secure-minded implementation, maintainable web architecture, and dependable user flows.
           </Typography>
         </Box>
       </RevealOnScroll>
@@ -254,11 +254,11 @@ function ProjectsPage() {
                   Want deeper case studies?
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  I can walk through architecture decisions, tradeoffs, and implementation details.
+                  I can walk through implementation decisions, security-minded tradeoffs, and how my web background supports cybersecurity work.
                 </Typography>
               </Box>
               <Button component={RouterLink} to="/contact" variant="contained" endIcon={<ArrowOutward />}>
-                Request A Walkthrough
+                Start A Conversation
               </Button>
             </Stack>
           </CardContent>

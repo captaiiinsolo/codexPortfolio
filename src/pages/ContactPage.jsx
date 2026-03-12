@@ -168,7 +168,7 @@ function ContactPage() {
               Contact Me
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.92rem', md: '0.95rem' } }}>
-              Share a bit about your project or role, and I will respond with next steps.
+              Share a bit about your role, team, or project. I am especially interested in cybersecurity opportunities, with full-stack web work also in scope.
             </Typography>
 
             <Stack direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 1.5, md: 2 }}>
