@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react'
-import { Box, CircularProgress } from '@mui/material'
+import { Box, Skeleton, Stack } from '@mui/material'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 const AppShell = lazy(() => import('../components/layout/AppShell'))
@@ -11,15 +11,19 @@ const ResumePage = lazy(() => import('../pages/ResumePage'))
 
 function RouteLoader() {
   return (
-    <Box
-      sx={{
-        minHeight: '42vh',
-        display: 'grid',
-        placeItems: 'center',
-      }}
-    >
-      <CircularProgress size={26} />
-    </Box>
+    <Stack spacing={2.5} sx={{ py: 2 }}>
+      <Skeleton variant="rounded" height={58} sx={{ borderRadius: 3 }} />
+      <Skeleton variant="rounded" height={220} sx={{ borderRadius: 3 }} />
+      <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+        <Skeleton variant="rounded" height={170} sx={{ flex: 1, borderRadius: 3 }} />
+        <Skeleton variant="rounded" height={170} sx={{ flex: 1, borderRadius: 3 }} />
+      </Stack>
+      <Box>
+        <Skeleton variant="text" width="42%" height={38} />
+        <Skeleton variant="text" width="78%" />
+        <Skeleton variant="text" width="64%" />
+      </Box>
+    </Stack>
   )
 }
 
