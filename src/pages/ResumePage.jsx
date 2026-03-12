@@ -50,6 +50,8 @@ const certifications = [
   },
 ]
 
+const resumeFileUrl = '/SolomonSantos_CSResume-2026.pdf'
+
 const sortCertifications = (a, b) => {
   const rank = (status) => (status === 'In Progress' ? 0 : 1)
   return rank(a.status) - rank(b.status)
@@ -67,18 +69,17 @@ function ResumePage() {
               </Typography>
               <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 780 }}>
                 A quick snapshot of the skills and credentials I am using to pursue cybersecurity roles, with
-                full-stack web development as a secondary track. If you would like the full PDF version, add your
-                resume file URL below.
+                full-stack web development as a secondary track. The full PDF version is available below.
               </Typography>
               <Button
                 variant="outlined"
                 startIcon={<FileDownload />}
                 component="a"
-                href="#"
-                disabled
+                href={resumeFileUrl}
+                download="SolomonSantos_CSResume-2026.pdf"
                 sx={{ width: 'fit-content' }}
               >
-                Download Resume (Coming Soon)
+                Download Resume
               </Button>
 
               <Box sx={{ pt: 1 }}>
@@ -390,3 +391,4 @@ function ResumePage() {
 }
 
 export default ResumePage
+
