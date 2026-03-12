@@ -3,23 +3,23 @@ import { Box, Button, Card, CardContent, Chip, Grid, Stack, Typography } from '@
 import RevealOnScroll from '../components/motion/RevealOnScroll'
 
 const highlights = [
-  'Frontend engineering with React, component architecture, and design systems.',
-  'Accessibility-conscious implementations with practical UX polish.',
-  'Performance-minded builds with clean, maintainable code structures.',
+  'Cybersecurity is my primary career target, supported by hands-on web application experience.',
+  'Frontend and full-stack fundamentals help me understand how modern applications are built and exposed to risk.',
+  'AWS cloud knowledge, accessibility awareness, and maintainable engineering habits strengthen my technical foundation.',
 ]
 
 const experience = [
   {
     period: 'Recent',
-    title: 'Frontend Projects',
+    title: 'Cybersecurity Transition Projects',
     description:
-      'Built and refined production-ready web interfaces with a focus on clarity, responsiveness, and maintainability.',
+      'Built and refined web projects that highlight secure-minded thinking, dependable UX, and maintainable implementation.',
   },
   {
     period: 'Ongoing',
-    title: 'Technical Growth',
+    title: 'Security and Web Development Growth',
     description:
-      'Expanding depth across product thinking, frontend architecture, and measurable performance optimization.',
+      'Expanding depth across cybersecurity concepts, cloud foundations, and full-stack development capabilities.',
   },
 ]
 
@@ -66,7 +66,8 @@ function ResumePage() {
                 Resume Overview
               </Typography>
               <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 780 }}>
-                A quick snapshot of my strengths and experience. If you would like the full PDF version, add your
+                A quick snapshot of the skills and credentials I am using to pursue cybersecurity roles, with
+                full-stack web development as a secondary track. If you would like the full PDF version, add your
                 resume file URL below.
               </Typography>
               <Button

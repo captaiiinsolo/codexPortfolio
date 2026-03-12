@@ -6,23 +6,23 @@ import RevealOnScroll from '../components/motion/RevealOnScroll'
 
 const focusAreas = [
   {
-    title: 'Product-Ready Frontends',
-    description: 'Component systems that scale with feature velocity while keeping UX consistent.',
+    title: 'Security-Minded Engineering',
+    description: 'Building web experiences with attention to safer defaults, trustworthy flows, and risk-aware decisions.',
   },
   {
-    title: 'Performance Discipline',
-    description: 'Fast interactions, lean bundles, and measurable web-vitals improvements.',
+    title: 'Full-Stack Web Foundation',
+    description: 'Using modern frontend and backend fundamentals to create applications that are maintainable and resilient.',
   },
   {
-    title: 'Cross-Team Execution',
-    description: 'Tight handoff between product, design, and engineering from idea to launch.',
+    title: 'Clear Technical Communication',
+    description: 'Translating technical detail into practical outcomes for teams, hiring managers, and stakeholders.',
   },
 ]
 
 const impactStats = [
-  { label: 'Projects shipped', value: '12+' },
-  { label: 'Primary stack', value: 'React + MUI' },
-  { label: 'Focus areas', value: 'UI, UX, DX' },
+  { label: 'Career direction', value: 'Cybersecurity' },
+  { label: 'Secondary focus', value: 'Full-stack web development' },
+  { label: 'Current strengths', value: 'React, cloud fundamentals, UX' },
 ]
 
 function HomePage() {
@@ -66,15 +66,15 @@ function HomePage() {
                       lineHeight: { xs: 1.08, md: 1.04 },
                     }}
                   >
-                    Design-minded frontend engineering with production-level rigor.
+                    Cybersecurity-focused builder with a full-stack web development foundation.
                   </Typography>
                   <Typography
                     variant="body1"
                     color="text.secondary"
                     sx={{ maxWidth: 660, fontSize: { xs: '1rem', md: '1.04rem' } }}
                   >
-                    I build modern web interfaces that feel polished, stay performant, and are easy for teams to
-                    evolve over time.
+                    I am building toward cybersecurity roles by combining secure-minded problem solving, cloud and
+                    web fundamentals, and hands-on experience creating modern applications with React.
                   </Typography>
                   <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
                     <Button
@@ -84,7 +84,7 @@ function HomePage() {
                       endIcon={<ArrowForward />}
                       sx={{ minHeight: 48, px: 2.25 }}
                     >
-                      Explore Projects
+                      View Relevant Work
                     </Button>
                     <Button
                       component={RouterLink}
@@ -149,7 +149,7 @@ function HomePage() {
             <Typography variant="overline" sx={{ letterSpacing: '0.14em', color: 'text.secondary', fontWeight: 700 }}>
               What I Bring
             </Typography>
-            <Typography variant="h5">How I Add Value</Typography>
+            <Typography variant="h5">How I Position My Work</Typography>
           </Stack>
           <Grid container spacing={2}>
             {focusAreas.map((item, index) => (

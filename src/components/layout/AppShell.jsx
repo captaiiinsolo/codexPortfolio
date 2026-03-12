@@ -130,7 +130,7 @@ function AppShell({ mode, onToggleColorMode }) {
           </Box>
 
           <Typography variant="caption" color="text.secondary" sx={{ px: 0.5, pb: { xs: 3, md: 1 } }}>
-            Crafted with React and MUI.
+            Cybersecurity-focused portfolio built with React and MUI.
           </Typography>
         </Stack>
       </Container>
