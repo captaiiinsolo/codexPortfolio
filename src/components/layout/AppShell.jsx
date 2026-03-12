@@ -69,25 +69,25 @@ function AppShell({ mode, onToggleColorMode }) {
         <Stack spacing={3}>
           <Box
             sx={{
-              borderRadius: { xs: 0, md: 3 },
-              border: { xs: 'none', md: '1px solid' },
+              borderRadius: { xs: 0, sm: 3 },
+              border: { xs: 'none', sm: '1px solid' },
               borderColor: 'divider',
               bgcolor: {
                 xs: 'transparent',
-                md: mode === 'dark' ? 'rgba(15, 23, 42, 0.74)' : 'rgba(255, 255, 255, 0.74)',
+                sm: mode === 'dark' ? 'rgba(15, 23, 42, 0.74)' : 'rgba(255, 255, 255, 0.74)',
               },
-              backdropFilter: { xs: 'none', md: 'blur(14px)' },
-              p: { xs: 0.5, md: 2 },
+              backdropFilter: { xs: 'none', sm: 'blur(14px)' },
+              p: { xs: 0.5, sm: 2 },
               boxShadow: {
                 xs: 'none',
-                md:
+                sm:
                   mode === 'dark'
                     ? '0 18px 40px -30px rgba(2, 6, 23, 0.95)'
                     : '0 18px 40px -30px rgba(15, 23, 42, 0.65)',
               },
             }}
           >
-            <Box sx={{ display: { xs: 'flex', md: 'none' }, justifyContent: 'flex-start' }}>
+            <Box sx={{ display: { xs: 'flex', sm: 'none' }, justifyContent: 'flex-start' }}>
               <Tooltip title="Open menu">
                 <IconButton
                   onClick={() => setMobileNavOpen(true)}
@@ -105,7 +105,7 @@ function AppShell({ mode, onToggleColorMode }) {
               </Tooltip>
             </Box>
 
-            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               <Stack direction="row" spacing={0.75} useFlexGap flexWrap="wrap">
                 {navItems.map((item) => (
                   <Button
@@ -209,5 +209,3 @@ function AppShell({ mode, onToggleColorMode }) {
 }
 
 export default AppShell
-
-
