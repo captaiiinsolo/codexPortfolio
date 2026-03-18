@@ -1,7 +1,9 @@
-﻿import { useState } from 'react'
+import { InfoOutlined } from '@mui/icons-material'
+import { useState } from 'react'
 import emailjs from '@emailjs/browser'
 import confetti from 'canvas-confetti'
-import { Alert, AlertTitle, Box, Button, Card, CardContent, Stack, TextField, Typography } from '@mui/material'
+import { Alert, AlertTitle, Box, Button, Card, CardContent, Stack, TextField, Tooltip, Typography } from '@mui/material'
+import RevealOnScroll from '../components/motion/RevealOnScroll'
 
 const EMAIL_REGEX = /^(?=.{6,254}$)(?=.{1,64}@)[A-Za-z0-9](?:[A-Za-z0-9._%+-]{0,62}[A-Za-z0-9])?@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/
 const PHONE_REGEX = /^\(\d{3}\)\s\d{3}-\d{4}$/
@@ -15,9 +17,13 @@ const initialValues = {
 }
 
 function fireSuccessConfetti() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return
+  }
+
   confetti({
-    particleCount: 140,
-    spread: 80,
+    particleCount: 80,
+    spread: 64,
     origin: { y: 0.6 },
   })
 }
@@ -144,104 +150,129 @@ function ContactPage() {
   }
 
   return (
-    <Card elevation={0} sx={{ border: '1px solid', borderColor: 'divider' }}>
-      <CardContent sx={{ p: { xs: 3, md: 4 } }}>
-        <Stack spacing={3} component="form" onSubmit={handleSubmit} noValidate>
-          <Typography variant="h4" component="h2">
-            Contact Me
-          </Typography>
+    <RevealOnScroll delay={40}>
+      <Card
+        elevation={0}
+        sx={(theme) => ({
+          border: '1px solid',
+          borderColor: 'divider',
+          background:
+            theme.palette.mode === 'dark'
+              ? 'linear-gradient(126deg, rgba(15,23,42,0.88) 0%, rgba(30,41,59,0.8) 36%, rgba(15,118,110,0.16) 100%)'
+              : 'linear-gradient(125deg, rgba(15,118,110,0.1) 0%, rgba(255,255,255,0.96) 36%, rgba(249,115,22,0.09) 100%)',
+        })}
+      >
+        <CardContent sx={{ p: { xs: 2.25, sm: 2.75, md: 4 } }}>
+          <Stack spacing={{ xs: 2.25, md: 3 }} component="form" onSubmit={handleSubmit} noValidate>
+            <Typography variant="h3" component="h2" sx={{ fontSize: { xs: '1.65rem', sm: '1.85rem', md: '2.3rem' } }}>
+              Contact Me
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.92rem', md: '0.95rem' } }}>
+              Share a bit about your role, team, or project. I am especially interested in cybersecurity opportunities, with full-stack web work also in scope.
+            </Typography>
 
-          <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 1.5, md: 2 }}>
+              <TextField
+                size="small"
+                label="First Name"
+                name="firstName"
+                value={values.firstName}
+                onChange={handleChange}
+                error={Boolean(errors.firstName)}
+                helperText={errors.firstName}
+                fullWidth
+                required
+              />
+              <TextField
+                size="small"
+                label="Last Name"
+                name="lastName"
+                value={values.lastName}
+                onChange={handleChange}
+                error={Boolean(errors.lastName)}
+                helperText={errors.lastName}
+                fullWidth
+                required
+              />
+            </Stack>
+
             <TextField
-              label="First Name"
-              name="firstName"
-              value={values.firstName}
+              size="small"
+              label="Email"
+              name="email"
+              value={values.email}
               onChange={handleChange}
-              error={Boolean(errors.firstName)}
-              helperText={errors.firstName}
+              error={Boolean(errors.email)}
+              helperText={errors.email}
               fullWidth
               required
             />
+
             <TextField
-              label="Last Name"
-              name="lastName"
-              value={values.lastName}
+              size="small"
+              label="Phone Number"
+              name="phone"
+              value={values.phone}
               onChange={handleChange}
-              error={Boolean(errors.lastName)}
-              helperText={errors.lastName}
+              error={Boolean(errors.phone)}
+              helperText={errors.phone}
               fullWidth
-              required
+              inputProps={{ maxLength: 14 }}
             />
+
+            <TextField
+              label={
+                <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.6 }}>
+                  Message
+                  <Tooltip title="Include project scope, timeline, and what success looks like." placement="top">
+                    <InfoOutlined sx={{ fontSize: '1rem', color: 'text.secondary' }} />
+                  </Tooltip>
+                </Box>
+              }
+              name="message"
+              value={values.message}
+              onChange={handleChange}
+              fullWidth
+              multiline
+              minRows={4}
+            />
+
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 1.25, sm: 2 }}>
+              <Button type="submit" variant="contained" disabled={isSubmitting}>
+                {isSubmitting ? 'Sending...' : 'Submit'}
+              </Button>
+              <Button
+                type="button"
+                variant="outlined"
+                component="a"
+                href={appointmentUrl || '#'}
+                target="_blank"
+                rel="noreferrer"
+                disabled={!appointmentUrl}
+              >
+                Schedule a 15-Minute Call
+              </Button>
+            </Stack>
+
+            {!appointmentUrl && (
+              <Alert severity="warning">
+                Add VITE_GOOGLE_CALENDAR_APPOINTMENT_URL to your .env file to enable call booking.
+              </Alert>
+            )}
+
+            {submitState.type === 'success' && (
+              <Alert severity="success" sx={{ alignItems: 'flex-start' }}>
+                <AlertTitle>Message Sent</AlertTitle>
+                {submitState.message}
+              </Alert>
+            )}
+
+            {submitState.type === 'error' && <Alert severity="error">{submitState.message}</Alert>}
           </Stack>
-
-          <TextField
-            label="Email"
-            name="email"
-            value={values.email}
-            onChange={handleChange}
-            error={Boolean(errors.email)}
-            helperText={errors.email}
-            fullWidth
-            required
-          />
-
-          <TextField
-            label="Phone Number"
-            name="phone"
-            value={values.phone}
-            onChange={handleChange}
-            error={Boolean(errors.phone)}
-            helperText={errors.phone}
-            fullWidth
-            inputProps={{ maxLength: 14 }}
-          />
-
-          <TextField
-            label="Message"
-            name="message"
-            value={values.message}
-            onChange={handleChange}
-            fullWidth
-            multiline
-            minRows={4}
-          />
-
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <Button type="submit" variant="contained" disabled={isSubmitting}>
-              {isSubmitting ? 'Sending...' : 'Submit'}
-            </Button>
-            <Button
-              type="button"
-              variant="outlined"
-              component="a"
-              href={appointmentUrl || '#'}
-              target="_blank"
-              rel="noreferrer"
-              disabled={!appointmentUrl}
-            >
-              Schedule a 15-Minute Call
-            </Button>
-          </Stack>
-
-          {!appointmentUrl && (
-            <Alert severity="warning">
-              Add VITE_GOOGLE_CALENDAR_APPOINTMENT_URL to your .env file to enable call booking.
-            </Alert>
-          )}
-
-          {submitState.type === 'success' && (
-            <Alert severity="success" sx={{ alignItems: 'flex-start' }}>
-              <AlertTitle>Message Sent</AlertTitle>
-              {submitState.message}
-            </Alert>
-          )}
-
-          {submitState.type === 'error' && <Alert severity="error">{submitState.message}</Alert>}
-        </Stack>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </RevealOnScroll>
   )
 }
 
 export default ContactPage
-
