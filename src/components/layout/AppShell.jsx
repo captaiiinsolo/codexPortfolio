@@ -54,9 +54,59 @@ function getNavButtonSx(mode) {
   }
 }
 
+function getDesktopNavButtonSx(mode) {
+  const isDark = mode === 'dark'
+
+  return {
+    position: 'relative',
+    px: { sm: 2.1, md: 2.4 },
+    py: 1.1,
+    minHeight: 46,
+    fontSize: '0.98rem',
+    color: isDark ? 'rgba(226, 232, 240, 0.78)' : 'rgba(15, 23, 42, 0.78)',
+    border: '1px solid transparent',
+    transition:
+      'transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, border-color 180ms ease, color 180ms ease',
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      inset: 'auto 18px 8px',
+      height: 2,
+      borderRadius: 999,
+      background: isDark
+        ? 'linear-gradient(90deg, rgba(45, 212, 191, 0) 0%, rgba(45, 212, 191, 0.75) 50%, rgba(45, 212, 191, 0) 100%)'
+        : 'linear-gradient(90deg, rgba(15, 118, 110, 0) 0%, rgba(15, 118, 110, 0.72) 50%, rgba(15, 118, 110, 0) 100%)',
+      opacity: 0,
+      transform: 'scaleX(0.45)',
+      transition: 'transform 180ms ease, opacity 180ms ease',
+    },
+    '&:hover': {
+      color: 'text.primary',
+      borderColor: isDark ? 'rgba(45, 212, 191, 0.18)' : 'rgba(15, 118, 110, 0.16)',
+      bgcolor: isDark ? 'rgba(15, 23, 42, 0.38)' : 'rgba(255, 255, 255, 0.62)',
+      boxShadow: isDark
+        ? '0 14px 28px -22px rgba(2, 6, 23, 0.95)'
+        : '0 14px 28px -22px rgba(15, 23, 42, 0.38)',
+    },
+    '&.active': {
+      color: 'primary.main',
+      borderColor: isDark ? 'rgba(45, 212, 191, 0.22)' : 'rgba(15, 118, 110, 0.2)',
+      bgcolor: isDark ? 'rgba(45, 212, 191, 0.12)' : 'rgba(240, 253, 250, 0.92)',
+      boxShadow: isDark
+        ? 'inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 18px 34px -24px rgba(45, 212, 191, 0.4)'
+        : 'inset 0 1px 0 rgba(255, 255, 255, 0.75), 0 18px 34px -24px rgba(15, 118, 110, 0.3)',
+    },
+    '&.active::after': {
+      opacity: 1,
+      transform: 'scaleX(1)',
+    },
+  }
+}
+
 function AppShell({ mode, onToggleColorMode }) {
   const location = useLocation()
   const navButtonSx = getNavButtonSx(mode)
+  const desktopNavButtonSx = getDesktopNavButtonSx(mode)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
   useEffect(() => {
@@ -70,20 +120,16 @@ function AppShell({ mode, onToggleColorMode }) {
           <Box
             sx={{
               borderRadius: { xs: 0, sm: 3 },
-              border: { xs: 'none', sm: '1px solid' },
-              borderColor: 'divider',
+              border: { xs: 'none', sm: 'none' },
               bgcolor: {
                 xs: 'transparent',
-                sm: mode === 'dark' ? 'rgba(15, 23, 42, 0.74)' : 'rgba(255, 255, 255, 0.74)',
+                sm: 'transparent',
               },
-              backdropFilter: { xs: 'none', sm: 'blur(14px)' },
-              p: { xs: 0.5, sm: 2 },
+              backdropFilter: { xs: 'none', sm: 'none' },
+              p: { xs: 0.5, sm: 0 },
               boxShadow: {
                 xs: 'none',
-                sm:
-                  mode === 'dark'
-                    ? '0 18px 40px -30px rgba(2, 6, 23, 0.95)'
-                    : '0 18px 40px -30px rgba(15, 23, 42, 0.65)',
+                sm: 'none',
               },
             }}
           >
@@ -106,7 +152,43 @@ function AppShell({ mode, onToggleColorMode }) {
             </Box>
 
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-              <Stack direction="row" spacing={0.75} useFlexGap flexWrap="wrap">
+              <Stack
+                direction="row"
+                spacing={1}
+                useFlexGap
+                flexWrap="wrap"
+                sx={{
+                  position: 'relative',
+                  overflow: 'hidden',
+                  borderRadius: 999,
+                  p: { sm: 0.9, md: 1 },
+                  border: '1px solid',
+                  borderColor: mode === 'dark' ? 'rgba(148, 163, 184, 0.22)' : 'rgba(15, 23, 42, 0.16)',
+                  bgcolor: mode === 'dark' ? 'rgba(15, 23, 42, 0.72)' : 'rgba(255, 255, 255, 0.88)',
+                  backdropFilter: 'blur(16px)',
+                  boxShadow:
+                    mode === 'dark'
+                      ? 'inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 18px 34px -26px rgba(2, 6, 23, 0.92)'
+                      : 'inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 18px 34px -26px rgba(15, 23, 42, 0.28)',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    inset: 0,
+                    background: mode === 'dark'
+                      ? 'linear-gradient(115deg, rgba(45, 212, 191, 0.1), rgba(15, 23, 42, 0) 42%, rgba(249, 115, 22, 0.1))'
+                      : 'linear-gradient(115deg, rgba(45, 212, 191, 0.12), rgba(255, 255, 255, 0.18) 42%, rgba(249, 115, 22, 0.1))',
+                    pointerEvents: 'none',
+                  },
+                  '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    inset: 1,
+                    borderRadius: 999,
+                    border: mode === 'dark' ? '1px solid rgba(255, 255, 255, 0.03)' : '1px solid rgba(255, 255, 255, 0.55)',
+                    pointerEvents: 'none',
+                  },
+                }}
+              >
                 {navItems.map((item) => (
                   <Button
                     key={item.to}
@@ -116,7 +198,7 @@ function AppShell({ mode, onToggleColorMode }) {
                     onFocus={() => prefetchRoute(item.to)}
                     onTouchStart={() => prefetchRoute(item.to)}
                     className={({ isActive }) => (isActive ? 'active' : '')}
-                    sx={navButtonSx}
+                    sx={{ ...navButtonSx, ...desktopNavButtonSx }}
                   >
                     {item.label}
                   </Button>
