@@ -1,8 +1,23 @@
-import { InfoOutlined } from '@mui/icons-material'
+import { Close, InfoOutlined, OpenInNew } from '@mui/icons-material'
 import { useState } from 'react'
 import emailjs from '@emailjs/browser'
 import confetti from 'canvas-confetti'
-import { Alert, AlertTitle, Box, Button, Card, CardContent, Stack, TextField, Tooltip, Typography } from '@mui/material'
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material'
 import RevealOnScroll from '../components/motion/RevealOnScroll'
 
 const EMAIL_REGEX = /^(?=.{6,254}$)(?=.{1,64}@)[A-Za-z0-9](?:[A-Za-z0-9._%+-]{0,62}[A-Za-z0-9])?@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/
@@ -46,12 +61,26 @@ function formatPhoneNumber(value) {
   return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`
 }
 
+function getGoogleEmbedSrc(value) {
+  if (!value) {
+    return ''
+  }
+
+  const trimmedValue = value.trim()
+  const iframeSrcMatch = trimmedValue.match(/src=["']([^"']+)["']/i)
+
+  return iframeSrcMatch?.[1] || trimmedValue
+}
+
 function ContactPage() {
   const [values, setValues] = useState(initialValues)
   const [errors, setErrors] = useState({})
   const [submitState, setSubmitState] = useState({ type: '', message: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isBookingOpen, setIsBookingOpen] = useState(false)
   const appointmentUrl = import.meta.env.VITE_GOOGLE_CALENDAR_APPOINTMENT_URL
+  const appointmentEmbedSrc = getGoogleEmbedSrc(import.meta.env.VITE_GOOGLE_CALENDAR_APPOINTMENT_EMBED)
+  const hasBookingOption = Boolean(appointmentEmbedSrc || appointmentUrl)
 
   const validate = () => {
     const nextErrors = {}
@@ -126,7 +155,7 @@ function ContactPage() {
       email: values.email.trim(),
       phone: values.phone.trim() || 'Not provided',
       message: values.message.trim() || 'No message provided',
-      schedule_call_link: appointmentUrl || 'Not configured',
+      schedule_call_link: appointmentUrl || appointmentEmbedSrc || 'Not configured',
     }
 
     try {
@@ -241,22 +270,28 @@ function ContactPage() {
               <Button type="submit" variant="contained" disabled={isSubmitting}>
                 {isSubmitting ? 'Sending...' : 'Submit'}
               </Button>
-              <Button
-                type="button"
-                variant="outlined"
-                component="a"
-                href={appointmentUrl || '#'}
-                target="_blank"
-                rel="noreferrer"
-                disabled={!appointmentUrl}
-              >
-                Schedule a 15-Minute Call
-              </Button>
+              {appointmentEmbedSrc ? (
+                <Button type="button" variant="outlined" onClick={() => setIsBookingOpen(true)}>
+                  Schedule a 15-Minute Call
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  variant="outlined"
+                  component="a"
+                  href={appointmentUrl || '#'}
+                  target="_blank"
+                  rel="noreferrer"
+                  disabled={!appointmentUrl}
+                >
+                  Schedule a 15-Minute Call
+                </Button>
+              )}
             </Stack>
 
-            {!appointmentUrl && (
+            {!hasBookingOption && (
               <Alert severity="warning">
-                Add VITE_GOOGLE_CALENDAR_APPOINTMENT_URL to your .env file to enable call booking.
+                Add `VITE_GOOGLE_CALENDAR_APPOINTMENT_URL` or `VITE_GOOGLE_CALENDAR_APPOINTMENT_EMBED` to your `.env` file to enable call booking.
               </Alert>
             )}
 
@@ -271,6 +306,60 @@ function ContactPage() {
           </Stack>
         </CardContent>
       </Card>
+
+      <Dialog
+        open={isBookingOpen}
+        onClose={() => setIsBookingOpen(false)}
+        fullWidth
+        maxWidth="md"
+        aria-labelledby="google-booking-dialog-title"
+        PaperProps={{
+          sx: {
+            borderRadius: { xs: 2, sm: 3 },
+            overflow: 'hidden',
+          },
+        }}
+      >
+        <DialogTitle
+          id="google-booking-dialog-title"
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2, pr: 1.25 }}
+        >
+          <Box>
+            <Typography variant="h6">Book a 15-minute call</Typography>
+            <Typography variant="body2" color="text.secondary">
+              Your Google booking page opens here, so visitors stay on your site.
+            </Typography>
+          </Box>
+          <IconButton onClick={() => setIsBookingOpen(false)} aria-label="Close booking dialog">
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent sx={{ px: { xs: 0, sm: 0 }, pb: 0 }}>
+          {appointmentEmbedSrc && (
+            <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
+              <Box
+                component="iframe"
+                src={appointmentEmbedSrc}
+                title="Google Calendar appointment booking"
+                sx={{
+                  display: 'block',
+                  width: '100%',
+                  minHeight: { xs: '72vh', md: 700 },
+                  border: 0,
+                  bgcolor: 'background.paper',
+                }}
+              />
+            </Box>
+          )}
+          {appointmentUrl && (
+            <Stack direction="row" justifyContent="flex-end" sx={{ p: 2 }}>
+              <Button component="a" href={appointmentUrl} target="_blank" rel="noreferrer" endIcon={<OpenInNew />}>
+                Open in a new tab
+              </Button>
+            </Stack>
+          )}
+        </DialogContent>
+      </Dialog>
     </RevealOnScroll>
   )
 }
