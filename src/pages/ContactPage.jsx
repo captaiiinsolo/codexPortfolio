@@ -326,9 +326,6 @@ function ContactPage() {
         >
           <Box>
             <Typography variant="h6">Book a 15-minute call</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Your Google booking page opens here, so visitors stay on your site.
-            </Typography>
           </Box>
           <IconButton onClick={() => setIsBookingOpen(false)} aria-label="Close booking dialog">
             <Close />
