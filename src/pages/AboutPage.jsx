@@ -3,6 +3,7 @@ import { Box, Button, Card, CardContent, Grid, Stack, Typography } from '@mui/ma
 import { Link as RouterLink } from 'react-router-dom'
 import RevealOnScroll from '../components/motion/RevealOnScroll'
 
+// Core positioning strengths presented as small supporting cards.
 const strengths = [
   {
     icon: <DesignServices color="primary" fontSize="small" />,
@@ -21,6 +22,7 @@ const strengths = [
   },
 ]
 
+// A lightweight process narrative to show how work is approached.
 const workflow = [
   'Start with risk, user trust, and the outcome the system needs to protect.',
   'Build with maintainable patterns so features can evolve without increasing fragility.',
@@ -31,6 +33,8 @@ function AboutPage() {
   return (
     <Stack spacing={{ xs: 3.5, md: 4.5 }}>
       <RevealOnScroll delay={30}>
+        {/* The opening card explains the career pivot and frames the
+            portfolio around practical security-oriented thinking. */}
         <Card
           elevation={0}
           sx={(theme) => ({
@@ -74,6 +78,8 @@ function AboutPage() {
       </RevealOnScroll>
 
       <Box>
+        {/* Strength cards translate the broader background into concrete
+            value a security-focused team might care about. */}
         <Stack spacing={0.75} sx={{ mb: 2.25 }}>
           <Typography variant="overline" sx={{ letterSpacing: '0.14em', color: 'text.secondary', fontWeight: 700 }}>
             Strengths
@@ -111,6 +117,8 @@ function AboutPage() {
       </Box>
 
       <RevealOnScroll delay={220}>
+        {/* Close with a simple process section so visitors can connect
+            mindset, execution habits, and outcomes. */}
         <Card
           elevation={0}
           sx={(theme) => ({

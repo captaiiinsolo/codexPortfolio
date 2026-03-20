@@ -2,6 +2,8 @@ import { Suspense, lazy } from 'react'
 import { Box, Skeleton, Stack } from '@mui/material'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
+// Lazy-load the shell and page modules so the first paint stays light
+// and each route can be fetched on demand.
 const AppShell = lazy(() => import('../components/layout/AppShell'))
 const AboutPage = lazy(() => import('../pages/AboutPage'))
 const ContactPage = lazy(() => import('../pages/ContactPage'))
@@ -11,6 +13,8 @@ const ResumePage = lazy(() => import('../pages/ResumePage'))
 
 function RouteLoader() {
   return (
+    // Match the site's card-heavy layout while route chunks are loading
+    // so the transition feels intentional instead of abrupt.
     <Stack spacing={2.5} sx={{ py: 2 }}>
       <Skeleton variant="rounded" height={58} sx={{ borderRadius: 3 }} />
       <Skeleton variant="rounded" height={220} sx={{ borderRadius: 3 }} />
@@ -29,6 +33,8 @@ function RouteLoader() {
 
 function AppRoutes({ mode, onToggleColorMode }) {
   return (
+    // Render a shared shell around every route and redirect any unknown
+    // path back to the homepage for a simple portfolio experience.
     <Suspense fallback={<RouteLoader />}>
       <Routes>
         <Route element={<AppShell mode={mode} onToggleColorMode={onToggleColorMode} />}>

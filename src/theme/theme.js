@@ -1,9 +1,13 @@
 import { createTheme } from '@mui/material/styles'
 
 function createAppTheme(mode = 'light') {
+  // Build one theme factory that can switch between light and dark palettes
+  // while preserving the same typography and component personality.
   const isDark = mode === 'dark'
 
   return createTheme({
+    // Palette values define the portfolio's teal/orange brand direction and
+    // the surfaces used throughout the app.
     palette: {
       mode,
       primary: {
@@ -27,6 +31,8 @@ function createAppTheme(mode = 'light') {
     shape: {
       borderRadius: 16,
     },
+    // Typography separates headline and body voices so the site feels more
+    // editorial than a default component library.
     typography: {
       fontFamily: '"Space Grotesk", "Segoe UI", sans-serif',
       h1: {
@@ -53,6 +59,8 @@ function createAppTheme(mode = 'light') {
     components: {
       MuiCssBaseline: {
         styleOverrides: {
+          // Global body gradients create the atmospheric background that sits
+          // behind every route.
           body: {
             color: isDark ? '#e2e8f0' : '#0f172a',
             background: isDark
@@ -71,6 +79,8 @@ function createAppTheme(mode = 'light') {
       },
       MuiCard: {
         styleOverrides: {
+          // Cards are the main compositional building blocks, so they get
+          // shared glassmorphism styling and a lift-on-hover treatment.
           root: {
             border: isDark ? '1px solid rgba(148, 163, 184, 0.18)' : '1px solid rgba(15, 23, 42, 0.08)',
             backgroundColor: isDark ? 'rgba(15, 23, 42, 0.72)' : 'rgba(255, 255, 255, 0.84)',
@@ -91,6 +101,8 @@ function createAppTheme(mode = 'light') {
       },
       MuiButton: {
         styleOverrides: {
+          // Buttons keep rounded, touch-friendly sizing and a small motion cue
+          // on hover/press.
           root: {
             borderRadius: 999,
             paddingInline: 20,
@@ -116,6 +128,7 @@ function createAppTheme(mode = 'light') {
       },
       MuiTextField: {
         styleOverrides: {
+          // Focus rings use soft teal glows to stay visible without feeling harsh.
           root: {
             '& .MuiOutlinedInput-root': {
               transition: 'box-shadow 180ms ease, border-color 180ms ease',

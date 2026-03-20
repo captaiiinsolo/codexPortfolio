@@ -1,8 +1,10 @@
 import { DarkMode, LightMode, Menu } from '@mui/icons-material'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Box, Button, Container, Drawer, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 
+// Centralize navigation labels and route targets so desktop and mobile
+// menus stay in sync.
 const navItems = [
   { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },
@@ -11,6 +13,8 @@ const navItems = [
   { label: 'Contact Me', to: '/contact' },
 ]
 
+// Mirror the route-level lazy imports here so hovering or focusing a nav
+// item can warm the next page before the user clicks it.
 const routePrefetchers = {
   '/': () => import('../../pages/HomePage'),
   '/about': () => import('../../pages/AboutPage'),
@@ -22,6 +26,8 @@ const routePrefetchers = {
 const prefetchedRoutes = new Set()
 
 function prefetchRoute(route) {
+  // Skip already-prefetched pages and remove failed attempts so they can
+  // be retried later.
   const loadRoute = routePrefetchers[route]
   if (!loadRoute || prefetchedRoutes.has(route)) {
     return
@@ -34,6 +40,7 @@ function prefetchRoute(route) {
 }
 
 function getNavButtonSx(mode) {
+  // Shared button behavior used in both navigation layouts.
   const isDark = mode === 'dark'
 
   return {
@@ -55,6 +62,8 @@ function getNavButtonSx(mode) {
 }
 
 function getDesktopNavButtonSx(mode) {
+  // Desktop nav gets a more polished "glass pill" treatment with an
+  // animated underline to reinforce the active route.
   const isDark = mode === 'dark'
 
   return {
@@ -109,10 +118,6 @@ function AppShell({ mode, onToggleColorMode }) {
   const desktopNavButtonSx = getDesktopNavButtonSx(mode)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
-  useEffect(() => {
-    setMobileNavOpen(false)
-  }, [location.pathname])
-
   return (
     <>
       <Container maxWidth="lg" sx={{ py: { xs: 2.5, md: 4 } }}>
@@ -133,6 +138,8 @@ function AppShell({ mode, onToggleColorMode }) {
               },
             }}
           >
+            {/* Mobile header exposes a compact drawer trigger instead of
+                trying to squeeze the full nav into small viewports. */}
             <Box sx={{ display: { xs: 'flex', sm: 'none' }, justifyContent: 'flex-start' }}>
               <Tooltip title="Open menu">
                 <IconButton
@@ -151,6 +158,8 @@ function AppShell({ mode, onToggleColorMode }) {
               </Tooltip>
             </Box>
 
+            {/* Desktop navigation acts as the main visual header and
+                prefetches routes as users interact with menu items. */}
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               <Stack
                 direction="row"
@@ -207,6 +216,8 @@ function AppShell({ mode, onToggleColorMode }) {
             </Box>
           </Box>
 
+          {/* Key the outlet by pathname so route-change animations replay
+              when the user moves between pages. */}
           <Box key={location.pathname} className="page-transition">
             <Outlet />
           </Box>
@@ -217,6 +228,8 @@ function AppShell({ mode, onToggleColorMode }) {
         </Stack>
       </Container>
 
+      {/* The drawer reuses the same navigation model for touch-friendly
+          mobile browsing. */}
       <Drawer
         anchor="left"
         open={mobileNavOpen}
@@ -241,6 +254,7 @@ function AppShell({ mode, onToggleColorMode }) {
               key={item.to}
               component={NavLink}
               to={item.to}
+              onClick={() => setMobileNavOpen(false)}
               onMouseEnter={() => prefetchRoute(item.to)}
               onFocus={() => prefetchRoute(item.to)}
               onTouchStart={() => prefetchRoute(item.to)}
@@ -260,6 +274,8 @@ function AppShell({ mode, onToggleColorMode }) {
         </Stack>
       </Drawer>
 
+      {/* A floating theme toggle keeps light/dark switching available
+          from every page without taking header space. */}
       <Tooltip title={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
         <IconButton
           onClick={onToggleColorMode}

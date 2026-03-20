@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import RevealOnScroll from '../components/motion/RevealOnScroll'
 
+// Intro content for the credibility/positioning cards under the hero.
 const focusAreas = [
   {
     title: 'Security-Minded Engineering',
@@ -19,6 +20,7 @@ const focusAreas = [
   },
 ]
 
+// Quick-scan highlights that sit alongside the hero copy.
 const impactStats = [
   { label: 'Career direction', value: 'Cybersecurity' },
   { label: 'Secondary focus', value: 'Full-stack web development' },
@@ -26,11 +28,14 @@ const impactStats = [
 ]
 
 function HomePage() {
+  // Track the pointer so the hero card can respond with a soft radial spotlight.
   const [spotlight, setSpotlight] = useState({ x: 50, y: 30 })
 
   return (
     <Stack spacing={{ xs: 3.5, md: 4.5 }}>
       <RevealOnScroll delay={30}>
+        {/* The hero establishes positioning, call-to-action paths, and a
+            subtle interactive background that follows the cursor. */}
         <Card
           elevation={0}
           onMouseMove={(event) => {
@@ -100,6 +105,8 @@ function HomePage() {
               </Grid>
 
               <Grid size={{ xs: 12, md: 4 }}>
+                {/* The snapshot card condenses the most important career
+                    signals into a quick recruiter-friendly summary. */}
                 <Card
                   elevation={0}
                   sx={(theme) => ({
@@ -145,6 +152,8 @@ function HomePage() {
 
       <RevealOnScroll delay={100}>
         <Box>
+          {/* Secondary cards reinforce the three themes the portfolio is
+              trying to communicate at a glance. */}
           <Stack spacing={0.75} sx={{ mb: 2.25 }}>
             <Typography variant="overline" sx={{ letterSpacing: '0.14em', color: 'text.secondary', fontWeight: 700 }}>
               What I Bring
