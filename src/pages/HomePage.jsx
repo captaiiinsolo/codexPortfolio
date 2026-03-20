@@ -91,7 +91,7 @@ function HomePage() {
                       to="/contact"
                       variant="outlined"
                       endIcon={<NorthEast />}
-                      sx={{ minHeight: 48, px: 2.25 }}
+                      sx={{ minHeight: 48, px: 2.25, whiteSpace: 'nowrap' }}
                     >
                       Start A Conversation
                     </Button>

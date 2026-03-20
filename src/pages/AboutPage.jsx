@@ -58,7 +58,13 @@ function AboutPage() {
                 opportunities, with full-stack development remaining a strong secondary focus.
               </Typography>
               <Box>
-                <Button component={RouterLink} to="/contact" variant="outlined" endIcon={<NorthEast />} sx={{ minHeight: 48, px: 2.25 }}>
+                <Button
+                  component={RouterLink}
+                  to="/contact"
+                  variant="outlined"
+                  endIcon={<NorthEast />}
+                  sx={{ minHeight: 48, px: 2.25, whiteSpace: 'nowrap' }}
+                >
                   Start A Conversation
                 </Button>
               </Box>
