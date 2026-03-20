@@ -18,6 +18,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 import RevealOnScroll from '../components/motion/RevealOnScroll'
 
 const EMAIL_REGEX = /^(?=.{6,254}$)(?=.{1,64}@)[A-Za-z0-9](?:[A-Za-z0-9._%+-]{0,62}[A-Za-z0-9])?@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/
@@ -73,6 +74,8 @@ function getGoogleEmbedSrc(value) {
 }
 
 function ContactPage() {
+  const theme = useTheme()
+  const isDarkMode = theme.palette.mode === 'dark'
   const [values, setValues] = useState(initialValues)
   const [errors, setErrors] = useState({})
   const [submitState, setSubmitState] = useState({ type: '', message: '' })
@@ -317,26 +320,52 @@ function ContactPage() {
           sx: {
             borderRadius: { xs: 2, sm: 3 },
             overflow: 'hidden',
+            bgcolor: isDarkMode ? '#f8fafc' : 'background.paper',
+            color: isDarkMode ? '#0f172a' : 'text.primary',
+            boxShadow: isDarkMode ? '0 28px 72px -24px rgba(2, 6, 23, 0.88)' : undefined,
           },
         }}
       >
         <DialogTitle
           id="google-booking-dialog-title"
-          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2, pr: 1.25 }}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 2,
+            pr: 1.25,
+            bgcolor: isDarkMode ? '#e2e8f0' : 'background.paper',
+            color: isDarkMode ? '#0f172a' : 'text.primary',
+            borderBottom: '1px solid',
+            borderColor: isDarkMode ? 'rgba(15, 23, 42, 0.08)' : 'divider',
+          }}
         >
           <Box>
             <Typography variant="h6">Book a 15-minute call</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Your Google booking page opens here, so visitors stay on your site.
-            </Typography>
           </Box>
-          <IconButton onClick={() => setIsBookingOpen(false)} aria-label="Close booking dialog">
+          <IconButton
+            onClick={() => setIsBookingOpen(false)}
+            aria-label="Close booking dialog"
+            sx={{ color: isDarkMode ? '#0f172a' : 'inherit' }}
+          >
             <Close />
           </IconButton>
         </DialogTitle>
-        <DialogContent sx={{ px: { xs: 0, sm: 0 }, pb: 0 }}>
+        <DialogContent
+          sx={{
+            px: { xs: 0, sm: 0 },
+            pb: 0,
+            bgcolor: isDarkMode ? '#f8fafc' : 'background.paper',
+          }}
+        >
           {appointmentEmbedSrc && (
-            <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
+            <Box
+              sx={{
+                borderTop: '1px solid',
+                borderColor: isDarkMode ? 'rgba(15, 23, 42, 0.08)' : 'divider',
+                bgcolor: '#ffffff',
+              }}
+            >
               <Box
                 component="iframe"
                 src={appointmentEmbedSrc}
@@ -346,7 +375,8 @@ function ContactPage() {
                   width: '100%',
                   minHeight: { xs: '72vh', md: 700 },
                   border: 0,
-                  bgcolor: 'background.paper',
+                  bgcolor: '#ffffff',
+                  colorScheme: 'light',
                 }}
               />
             </Box>
