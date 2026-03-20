@@ -1,5 +1,5 @@
-import { ArrowForward, ArrowOutward } from '@mui/icons-material'
-import { Box, Button, Card, CardContent, Chip, Grid, Stack, Typography } from '@mui/material'
+import { ArrowOutward } from '@mui/icons-material'
+import { Box, Button, Card, CardContent, Chip, Stack, Typography } from '@mui/material'
 import { useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import RevealOnScroll from '../components/motion/RevealOnScroll'
@@ -34,211 +34,426 @@ const projects = [
   },
 ]
 
-const faceCardSx = {
-  position: 'absolute',
-  inset: 0,
-  backfaceVisibility: 'hidden',
-  WebkitBackfaceVisibility: 'hidden',
-  transformStyle: 'preserve-3d',
-  WebkitTransformStyle: 'preserve-3d',
-  willChange: 'transform',
-}
+function getDesktopCardMotion(offset, isExpanded) {
+  const absOffset = Math.abs(offset)
+  const isActive = offset === 0
 
-function FlipAction({ side = 'right', reversed = false, onToggle }) {
-  const isLeft = side === 'left'
-
-  return (
-    <Box
-      sx={{
-        position: 'absolute',
-        left: isLeft ? 12 : 'auto',
-        right: isLeft ? 'auto' : 12,
-        bottom: 12,
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: isLeft ? 'row-reverse' : 'row',
-      }}
-    >
-      <Box
-        className="flip-hint"
-        sx={(theme) => ({
-          mr: isLeft ? 0 : 1,
-          ml: isLeft ? 1 : 0,
-          px: 1.1,
-          py: 0.45,
-          borderRadius: 99,
-          border: '1px solid',
-          borderColor: 'divider',
-          bgcolor: theme.palette.mode === 'dark' ? 'rgba(15, 23, 42, 0.96)' : 'rgba(255, 255, 255, 0.96)',
-          color: 'text.secondary',
-          fontSize: { xs: '0.66rem', sm: '0.74rem' },
-          fontWeight: 600,
-          whiteSpace: 'nowrap',
-          opacity: { xs: 0, md: 0 },
-          transform: isLeft ? 'translateX(-14px)' : 'translateX(14px)',
-          filter: 'blur(1.5px)',
-          transition: 'opacity 260ms ease, transform 260ms ease, filter 260ms ease',
-          pointerEvents: 'none',
-        })}
-      >
-        Click for more details
-      </Box>
-      <Button
-        type="button"
-        onClick={onToggle}
-        aria-label="Flip project card"
-        sx={{
-          minWidth: 0,
-          p: 0,
-          width: 34,
-          height: 34,
-          borderRadius: '50%',
-          border: '1px solid',
-          borderColor: 'divider',
-          display: 'grid',
-          placeItems: 'center',
-          color: 'primary.main',
-          bgcolor: 'background.paper',
-          zIndex: 1,
-          '&:hover': {
-            bgcolor: 'background.paper',
-          },
-        }}
-      >
-        <ArrowForward fontSize="small" sx={{ transform: reversed ? 'rotate(180deg)' : 'none' }} />
-      </Button>
-    </Box>
-  )
+  return {
+    translateX: offset * 220,
+    rotateY: offset * -24,
+    translateZ: isActive ? (isExpanded ? 150 : 118) : -72 - absOffset * 42,
+    scale: isActive ? (isExpanded ? 1.05 : 1) : Math.max(0.74, 0.9 - absOffset * 0.08),
+    opacity: absOffset > 2 ? 0 : Math.max(0.26, 1 - absOffset * 0.22),
+  }
 }
 
 function ProjectsPage() {
-  const [flipped, setFlipped] = useState({})
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [expandedIndex, setExpandedIndex] = useState(-1)
 
-  const toggleCard = (title) => {
-    setFlipped((prev) => ({ ...prev, [title]: !prev[title] }))
+  const scrollToCard = (index) => {
+    const nextIndex = Math.max(0, Math.min(index, projects.length - 1))
+    setActiveIndex(nextIndex)
+  }
+
+  const handleCardClick = (index) => {
+    if (index === activeIndex) {
+      setExpandedIndex((current) => (current === index ? -1 : index))
+      return
+    }
+
+    setActiveIndex(index)
+    setExpandedIndex(index)
+  }
+
+  const handleRailKeyDown = (event) => {
+    if (event.key === 'ArrowRight') {
+      event.preventDefault()
+      scrollToCard(activeIndex + 1)
+    }
+
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault()
+      scrollToCard(activeIndex - 1)
+    }
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      handleCardClick(activeIndex)
+    }
   }
 
   return (
-    <Stack spacing={{ xs: 2.25, md: 3 }}>
+    <Stack spacing={{ xs: 2.5, md: 3.5 }}>
       <RevealOnScroll delay={30}>
-        <Box>
-          <Typography variant="h3" component="h2" sx={{ fontSize: { xs: '1.75rem', md: '2.6rem' }, mb: 1 }}>
+        <Stack spacing={1.25}>
+          <Typography variant="h3" component="h2" sx={{ fontSize: { xs: '1.85rem', md: '2.7rem' } }}>
             Selected Work
           </Typography>
           <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 760, fontSize: { xs: '0.98rem', md: '1rem' } }}>
-            A few examples of how I think about secure-minded implementation, maintainable web architecture, and dependable user flows.
+            Explore the work sideways. Each card opens a fuller case-study snapshot focused on secure-minded implementation,
+            resilient UX, and maintainable architecture.
           </Typography>
-        </Box>
+        </Stack>
       </RevealOnScroll>
 
-      <Grid container spacing={{ xs: 1.5, md: 2 }}>
-        {projects.map((project, index) => {
-          const isFlipped = Boolean(flipped[project.title])
+      <RevealOnScroll delay={110}>
+        <Card
+          elevation={0}
+          sx={(theme) => ({
+            overflow: 'visible',
+            background:
+              theme.palette.mode === 'dark'
+                ? 'linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(15, 118, 110, 0.18) 58%, rgba(249, 115, 22, 0.12) 100%)'
+                : 'linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(240,253,250,0.98) 58%, rgba(255,237,213,0.84) 100%)',
+          })}
+        >
+          <CardContent sx={{ p: { xs: 2.25, md: 3 }, overflow: 'visible' }}>
+            <Stack spacing={2.5}>
+              <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1.5}>
+                <Box>
+                  <Typography variant="overline" sx={{ letterSpacing: '0.14em', color: 'text.secondary', fontWeight: 700 }}>
+                    Project Carousel
+                  </Typography>
+                  <Typography variant="h5" sx={{ fontSize: { xs: '1.2rem', md: '1.45rem' } }}>
+                    A 3D-style view of the work
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                    Move your cursor across the stage to shift focus, then click the centered card to expand it.
+                  </Typography>
+                </Box>
+              </Stack>
 
-          return (
-            <Grid key={project.title} size={{ xs: 12, md: 6 }}>
-              <RevealOnScroll delay={120 + index * 80}>
-                <Box sx={{ perspective: '1600px' }}>
-                  <Box
-                    sx={{
-                      position: 'relative',
-                      minHeight: { xs: 332, md: 360 },
-                      outline: 'none',
-                      borderRadius: 2,
-                      '&:hover .flip-hint, &:focus-within .flip-hint': {
-                        opacity: 1,
-                        transform: 'translateX(0)',
-                        filter: 'blur(0)',
-                      },
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        inset: 0,
-                        transformStyle: 'preserve-3d',
-                        WebkitTransformStyle: 'preserve-3d',
-                        transition: 'transform 620ms cubic-bezier(0.2, 0.9, 0.2, 1)',
-                        willChange: 'transform',
-                        transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-                      }}
-                    >
-                      <Card
-                        elevation={0}
-                        sx={{
-                          ...faceCardSx,
-                          transform: 'rotateY(0deg) translateZ(0.1px)',
-                          pointerEvents: isFlipped ? 'none' : 'auto',
-                          '&:hover': {
-                            transform: 'rotateY(0deg) translateZ(0.1px)',
+              <Box
+                role="listbox"
+                aria-label="Project carousel"
+                tabIndex={0}
+                onKeyDown={handleRailKeyDown}
+                onMouseMove={(event) => {
+                  if (window.innerWidth < 900) {
+                    return
+                  }
+
+                  const rect = event.currentTarget.getBoundingClientRect()
+                  const x = event.clientX - rect.left
+                  const zoneWidth = rect.width / projects.length
+                  const nextIndex = Math.max(0, Math.min(projects.length - 1, Math.floor(x / zoneWidth)))
+                  const zoneProgress = (x - nextIndex * zoneWidth) / zoneWidth
+
+                  if (nextIndex > activeIndex && zoneProgress < 0.35) {
+                    return
+                  }
+
+                  if (nextIndex < activeIndex && zoneProgress > 0.65) {
+                    return
+                  }
+
+                  if (nextIndex !== activeIndex) {
+                    setActiveIndex(nextIndex)
+                  }
+                }}
+                sx={{
+                  position: 'relative',
+                  perspective: { xs: 'none', md: '1800px' },
+                  px: { xs: 0, md: 1 },
+                  pb: { xs: 0, md: expandedIndex === activeIndex ? 12 : 4 },
+                  outline: 'none',
+                  cursor: { xs: 'default', md: 'ew-resize' },
+                  overflow: 'visible',
+                  transition: 'padding-bottom 320ms ease',
+                }}
+              >
+                <Box
+                  sx={(theme) => ({
+                    display: { xs: 'none', md: 'block' },
+                    position: 'relative',
+                    height: 390,
+                    transformStyle: 'preserve-3d',
+                    overflow: 'visible',
+                    '&::after': {
+                      content: '""',
+                      position: 'absolute',
+                      left: '50%',
+                      bottom: -8,
+                      width: '78%',
+                      height: 44,
+                      transform: 'translateX(-50%)',
+                      borderRadius: '50%',
+                      background: theme.palette.mode === 'dark'
+                        ? 'radial-gradient(circle, rgba(2,6,23,0.5) 0%, rgba(2,6,23,0) 72%)'
+                        : 'radial-gradient(circle, rgba(15,23,42,0.16) 0%, rgba(15,23,42,0) 72%)',
+                      pointerEvents: 'none',
+                      filter: 'blur(8px)',
+                    },
+                  })}
+                >
+                  {projects.map((project, index) => {
+                    const offset = index - activeIndex
+                    const absOffset = Math.abs(offset)
+                    const isActive = offset === 0
+                    const isExpanded = expandedIndex === index
+                    const motion = getDesktopCardMotion(offset, isExpanded && isActive)
+
+                    return (
+                      <Box
+                        key={project.title}
+                        component="button"
+                        type="button"
+                        role="option"
+                        aria-selected={isActive}
+                        onClick={() => handleCardClick(index)}
+                        sx={(theme) => ({
+                          position: 'absolute',
+                          top: isExpanded && isActive ? -26 : 12,
+                          left: '50%',
+                          width: 'min(420px, 68vw)',
+                          minHeight: isExpanded && isActive ? 430 : 340,
+                          p: 0,
+                          border: 'none',
+                          background: 'transparent',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          transformStyle: 'preserve-3d',
+                          transform: `translateX(calc(-50% + ${motion.translateX}px)) translateZ(${motion.translateZ}px) rotateY(${motion.rotateY}deg) scale(${motion.scale})`,
+                          opacity: motion.opacity,
+                          zIndex: isExpanded && isActive ? 40 : 20 - absOffset,
+                          transition:
+                            'transform 620ms cubic-bezier(0.2, 0.85, 0.2, 1), opacity 360ms ease, top 360ms cubic-bezier(0.2, 0.85, 0.2, 1), filter 360ms ease',
+                          filter: isActive ? 'none' : `saturate(${Math.max(0.66, 0.9 - absOffset * 0.1)}) blur(${absOffset > 1 ? 0.2 : 0}px)`,
+                          outline: 'none',
+                          '&:focus-visible': {
+                            boxShadow: theme.palette.mode === 'dark'
+                              ? '0 0 0 3px rgba(45, 212, 191, 0.32)'
+                              : '0 0 0 3px rgba(15, 118, 110, 0.2)',
+                            borderRadius: 18,
                           },
-                        }}
+                        })}
                       >
-                        <CardContent sx={{ p: { xs: 2.25, md: 3 }, height: '100%', position: 'relative', pb: 7 }}>
-                          <Stack spacing={{ xs: 1.5, md: 2 }}>
-                            <Box>
-                              <Typography variant="h5" sx={{ mb: 0.5, fontSize: { xs: '1.6rem', md: '2rem' } }}>
+                        <Card
+                          elevation={0}
+                          sx={(theme) => ({
+                            height: '100%',
+                            minHeight: isExpanded && isActive ? 430 : 340,
+                            overflow: 'hidden',
+                            backdropFilter: 'none',
+                            backgroundColor: theme.palette.mode === 'dark' ? '#111c31' : '#f8fbfb',
+                            borderColor: isActive
+                              ? theme.palette.mode === 'dark'
+                                ? 'rgba(45, 212, 191, 0.5)'
+                                : 'rgba(15, 118, 110, 0.4)'
+                              : 'divider',
+                            background: isActive
+                              ? theme.palette.mode === 'dark'
+                                ? 'linear-gradient(180deg, #131d34 0%, #1b3745 100%)'
+                                : 'linear-gradient(180deg, #ffffff 0%, #edf8f6 100%)'
+                              : theme.palette.mode === 'dark'
+                                ? 'linear-gradient(180deg, #162136 0%, #131c2e 100%)'
+                                : 'linear-gradient(180deg, #ffffff 0%, #f4f7f8 100%)',
+                            boxShadow: isActive
+                              ? theme.palette.mode === 'dark'
+                                ? '0 34px 60px -30px rgba(45, 212, 191, 0.34)'
+                                : '0 34px 60px -30px rgba(15, 118, 110, 0.28)'
+                              : theme.palette.mode === 'dark'
+                                ? '0 20px 38px -28px rgba(2, 6, 23, 0.85)'
+                                : '0 20px 38px -28px rgba(15, 23, 42, 0.32)',
+                            transition:
+                              'border-color 300ms ease, box-shadow 420ms cubic-bezier(0.2, 0.85, 0.2, 1), background 320ms ease',
+                          })}
+                        >
+                          <CardContent sx={{ p: { xs: 2.25, md: 2.75 }, height: '100%' }}>
+                            <Stack spacing={{ xs: 1.6, md: 1.9 }} sx={{ height: '100%' }}>
+                              <Stack direction="row" justifyContent="space-between" spacing={1} alignItems="flex-start">
+                                <Box>
+                                  <Typography
+                                    variant="h5"
+                                    sx={{
+                                      fontSize: { xs: '1.3rem', md: isActive ? '1.62rem' : '1.46rem' },
+                                      lineHeight: 1.08,
+                                      letterSpacing: '-0.03em',
+                                      mb: 0.65,
+                                      maxWidth: isActive ? '100%' : '92%',
+                                    }}
+                                  >
+                                    {project.title}
+                                  </Typography>
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ fontSize: '0.82rem', letterSpacing: '0.04em', textTransform: 'uppercase' }}
+                                  >
+                                    {project.role}
+                                  </Typography>
+                                </Box>
+                                <Typography
+                                  variant="caption"
+                                  sx={{
+                                    px: 1.1,
+                                    py: 0.55,
+                                    borderRadius: 999,
+                                    bgcolor: isActive ? 'primary.main' : 'action.hover',
+                                    color: isActive ? 'primary.contrastText' : 'text.secondary',
+                                    fontWeight: 700,
+                                    letterSpacing: '0.08em',
+                                    textTransform: 'uppercase',
+                                  }}
+                                >
+                                  {isActive ? 'Center' : `0${index + 1}`}
+                                </Typography>
+                              </Stack>
+
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                sx={{
+                                  fontSize: { xs: '0.93rem', md: '0.98rem' },
+                                  lineHeight: 1.58,
+                                  maxWidth: '32ch',
+                                }}
+                              >
+                                {project.summary}
+                              </Typography>
+
+                              <Stack direction="row" spacing={0.85} useFlexGap flexWrap="wrap">
+                                {project.stack.map((tech) => (
+                                  <Chip key={tech} label={tech} size="small" variant={isActive ? 'filled' : 'outlined'} />
+                                ))}
+                              </Stack>
+
+                              {isExpanded && isActive ? (
+                                <Stack spacing={1.05} sx={{ pt: 0.65 }}>
+                                  <Typography variant="body2" sx={{ color: 'text.primary', fontWeight: 600, letterSpacing: '-0.01em' }}>
+                                    Project details
+                                  </Typography>
+                                  <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.62 }}>
+                                    {project.detail}
+                                  </Typography>
+                                  {project.outcomes.map((outcome) => (
+                                    <Typography key={outcome} variant="body2" color="text.secondary" sx={{ lineHeight: 1.5 }}>
+                                      {`\u2022 ${outcome}`}
+                                    </Typography>
+                                  ))}
+                                  <Typography variant="body2" sx={{ color: 'primary.main', fontWeight: 700, pt: 0.5 }}>
+                                    Click again to collapse
+                                  </Typography>
+                                </Stack>
+                              ) : (
+                                <Box sx={{ mt: 'auto', pt: 1.5 }}>
+                                  <Typography
+                                    variant="body2"
+                                    sx={{ color: 'primary.main', fontWeight: 700, letterSpacing: '-0.01em' }}
+                                  >
+                                    {isActive ? 'Click to expand this card' : 'Move here and click to bring forward'}
+                                  </Typography>
+                                </Box>
+                              )}
+                            </Stack>
+                          </CardContent>
+                        </Card>
+                      </Box>
+                    )
+                  })}
+                </Box>
+
+                <Stack spacing={1.5} sx={{ display: { xs: 'flex', md: 'none' } }}>
+                  {projects.map((project, index) => {
+                    const isActive = index === activeIndex
+                    const isExpanded = expandedIndex === index
+
+                    return (
+                      <Box
+                        key={project.title}
+                        component="button"
+                        type="button"
+                        role="option"
+                        aria-selected={isActive}
+                        onClick={() => handleCardClick(index)}
+                        sx={(theme) => ({
+                          p: 0,
+                          border: 'none',
+                          background: 'transparent',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          outline: 'none',
+                          transform: isActive ? 'scale(1)' : 'scale(0.98)',
+                          transition: 'transform 220ms ease',
+                          '&:focus-visible': {
+                            boxShadow: theme.palette.mode === 'dark'
+                              ? '0 0 0 3px rgba(45, 212, 191, 0.32)'
+                              : '0 0 0 3px rgba(15, 118, 110, 0.2)',
+                            borderRadius: 18,
+                          },
+                        })}
+                      >
+                        <Card
+                          elevation={0}
+                          sx={(theme) => ({
+                            backdropFilter: 'none',
+                            backgroundColor: theme.palette.mode === 'dark' ? '#111c31' : '#f8fbfb',
+                            borderColor: isActive
+                              ? theme.palette.mode === 'dark'
+                                ? 'rgba(45, 212, 191, 0.5)'
+                                : 'rgba(15, 118, 110, 0.4)'
+                              : 'divider',
+                            background:
+                              theme.palette.mode === 'dark'
+                                ? isActive
+                                  ? 'linear-gradient(180deg, #131d34 0%, #183442 100%)'
+                                  : 'linear-gradient(180deg, #162136 0%, #131c2e 100%)'
+                                : isActive
+                                  ? 'linear-gradient(180deg, #ffffff 0%, #edf8f6 100%)'
+                                  : 'linear-gradient(180deg, #ffffff 0%, #f4f7f8 100%)',
+                          })}
+                        >
+                          <CardContent sx={{ p: 2.25 }}>
+                            <Stack spacing={1.4}>
+                              <Typography variant="h6" sx={{ lineHeight: 1.12, letterSpacing: '-0.02em' }}>
                                 {project.title}
                               </Typography>
-                              <Typography variant="body2" color="text.secondary">
+                              <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.82rem', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
                                 {project.role}
                               </Typography>
-                            </Box>
-
-                            <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.93rem', md: '0.95rem' } }}>
-                              {project.summary}
-                            </Typography>
-
-                            <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                              {project.stack.map((tech) => (
-                                <Chip key={tech} label={tech} size="small" variant="outlined" />
-                              ))}
-                            </Stack>
-                          </Stack>
-
-                          <FlipAction side="right" onToggle={() => toggleCard(project.title)} />
-                        </CardContent>
-                      </Card>
-
-                      <Card
-                        elevation={0}
-                        sx={{
-                          ...faceCardSx,
-                          transform: 'rotateY(180deg) translateZ(0.1px)',
-                          pointerEvents: isFlipped ? 'auto' : 'none',
-                          '&:hover': {
-                            transform: 'rotateY(180deg) translateZ(0.1px)',
-                          },
-                        }}
-                      >
-                        <CardContent sx={{ p: { xs: 2.25, md: 3 }, height: '100%', position: 'relative', pb: 7 }}>
-                          <Stack spacing={{ xs: 1, md: 1.25 }}>
-                            <Typography variant="h6" sx={{ color: 'primary.main', fontSize: { xs: '1.1rem', md: '1.2rem' } }}>
-                              {project.title}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.92rem', md: '0.95rem' } }}>
-                              {project.detail}
-                            </Typography>
-                            <Stack spacing={0.75} sx={{ pt: 0.5 }}>
-                              {project.outcomes.map((outcome) => (
-                                <Typography key={outcome} variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.88rem', md: '0.92rem' } }}>
-                                  - {outcome}
+                              <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.56 }}>
+                                {project.summary}
+                              </Typography>
+                              <Stack direction="row" spacing={0.85} useFlexGap flexWrap="wrap">
+                                {project.stack.map((tech) => (
+                                  <Chip key={tech} label={tech} size="small" variant={isActive ? 'filled' : 'outlined'} />
+                                ))}
+                              </Stack>
+                              {isExpanded && isActive ? (
+                                <Stack spacing={1}>
+                                  <Typography variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
+                                    Project details
+                                  </Typography>
+                                  <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+                                    {project.detail}
+                                  </Typography>
+                                  {project.outcomes.map((outcome) => (
+                                    <Typography key={outcome} variant="body2" color="text.secondary" sx={{ lineHeight: 1.5 }}>
+                                      {`\u2022 ${outcome}`}
+                                    </Typography>
+                                  ))}
+                                  <Typography variant="body2" sx={{ color: 'primary.main', fontWeight: 700 }}>
+                                    Tap again to collapse
+                                  </Typography>
+                                </Stack>
+                              ) : (
+                                <Typography variant="body2" sx={{ color: 'primary.main', fontWeight: 700 }}>
+                                  {isActive ? 'Tap to expand this card' : 'Tap to select'}
                                 </Typography>
-                              ))}
+                              )}
                             </Stack>
-                          </Stack>
-
-                          <FlipAction side="left" reversed onToggle={() => toggleCard(project.title)} />
-                        </CardContent>
-                      </Card>
-                    </Box>
-                  </Box>
-                </Box>
-              </RevealOnScroll>
-            </Grid>
-          )
-        })}
-      </Grid>
+                          </CardContent>
+                        </Card>
+                      </Box>
+                    )
+                  })}
+                </Stack>
+              </Box>
+            </Stack>
+          </CardContent>
+        </Card>
+      </RevealOnScroll>
 
       <RevealOnScroll delay={260}>
         <Card elevation={0}>
@@ -257,7 +472,7 @@ function ProjectsPage() {
                   I can walk through implementation decisions, security-minded tradeoffs, and how my web background supports cybersecurity work.
                 </Typography>
               </Box>
-              <Button component={RouterLink} to="/contact" variant="contained" endIcon={<ArrowOutward />}>
+              <Button component={RouterLink} to="/contact" variant="contained" endIcon={<ArrowOutward />} sx={{ whiteSpace: 'nowrap' }}>
                 Start A Conversation
               </Button>
             </Stack>
