@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import RevealOnScroll from '../components/motion/RevealOnScroll'
 
+// Portfolio case-study summaries that feed both the desktop carousel
+// and the stacked mobile layout.
 const projects = [
   {
     title: 'Security-Focused Portfolio Refresh',
@@ -35,6 +37,8 @@ const projects = [
 ]
 
 function getDesktopCardMotion(offset, isExpanded) {
+  // Convert a card's distance from the active index into the transforms
+  // needed for the faux-3D desktop carousel.
   const absOffset = Math.abs(offset)
   const isActive = offset === 0
 
@@ -52,11 +56,14 @@ function ProjectsPage() {
   const [expandedIndex, setExpandedIndex] = useState(-1)
 
   const scrollToCard = (index) => {
+    // Clamp keyboard navigation so focus never moves past the available cards.
     const nextIndex = Math.max(0, Math.min(index, projects.length - 1))
     setActiveIndex(nextIndex)
   }
 
   const handleCardClick = (index) => {
+    // Clicking the focused card toggles details. Clicking a side card
+    // first brings it forward, then expands it.
     if (index === activeIndex) {
       setExpandedIndex((current) => (current === index ? -1 : index))
       return
@@ -67,6 +74,7 @@ function ProjectsPage() {
   }
 
   const handleRailKeyDown = (event) => {
+    // Mirror the pointer-based carousel interaction with keyboard support.
     if (event.key === 'ArrowRight') {
       event.preventDefault()
       scrollToCard(activeIndex + 1)
@@ -86,6 +94,8 @@ function ProjectsPage() {
   return (
     <Stack spacing={{ xs: 2.5, md: 3.5 }}>
       <RevealOnScroll delay={30}>
+        {/* Intro copy explains the interaction model before the user
+            gets into the carousel itself. */}
         <Stack spacing={1.25}>
           <Typography variant="h3" component="h2" sx={{ fontSize: { xs: '1.85rem', md: '2.7rem' } }}>
             Selected Work
@@ -98,6 +108,8 @@ function ProjectsPage() {
       </RevealOnScroll>
 
       <RevealOnScroll delay={110}>
+        {/* The main project stage renders as an interactive 3D rail on
+            desktop and degrades to a stacked tap-to-expand list on mobile. */}
         <Card
           elevation={0}
           sx={(theme) => ({
@@ -130,6 +142,8 @@ function ProjectsPage() {
                 tabIndex={0}
                 onKeyDown={handleRailKeyDown}
                 onMouseMove={(event) => {
+                  // Divide the rail into hover zones so the centered card
+                  // changes smoothly as the pointer moves across the stage.
                   if (window.innerWidth < 900) {
                     return
                   }
@@ -187,6 +201,8 @@ function ProjectsPage() {
                     },
                   })}
                 >
+                  {/* Desktop cards are absolutely positioned and animated in
+                      3D space relative to the active index. */}
                   {projects.map((project, index) => {
                     const offset = index - activeIndex
                     const absOffset = Math.abs(offset)
@@ -355,6 +371,8 @@ function ProjectsPage() {
                 </Box>
 
                 <Stack spacing={1.5} sx={{ display: { xs: 'flex', md: 'none' } }}>
+                  {/* Mobile keeps the same content but swaps the carousel
+                      illusion for a simpler stacked interaction. */}
                   {projects.map((project, index) => {
                     const isActive = index === activeIndex
                     const isExpanded = expandedIndex === index
@@ -456,6 +474,7 @@ function ProjectsPage() {
       </RevealOnScroll>
 
       <RevealOnScroll delay={260}>
+        {/* Final CTA gives visitors a clear next step after browsing the work. */}
         <Card elevation={0}>
           <CardContent sx={{ p: { xs: 2.25, md: 3 } }}>
             <Stack

@@ -2,12 +2,14 @@ import { FileDownload, OpenInNew, Verified, WorkHistory } from '@mui/icons-mater
 import { Box, Button, Card, CardContent, Chip, Grid, Stack, Typography } from '@mui/material'
 import RevealOnScroll from '../components/motion/RevealOnScroll'
 
+// Resume talking points shown as short supporting bullets.
 const highlights = [
   'Cybersecurity is my primary career target, supported by hands-on web application experience.',
   'Frontend and full-stack fundamentals help me understand how modern applications are built and exposed to risk.',
   'AWS cloud knowledge, accessibility awareness, and maintainable engineering habits strengthen my technical foundation.',
 ]
 
+// Lightweight experience framing used instead of a full timeline.
 const experience = [
   {
     period: 'Recent',
@@ -23,6 +25,7 @@ const experience = [
   },
 ]
 
+// Certification data powers the featured cards near the top of the page.
 const certifications = [
   {
     name: 'AWS Certified Cloud Practitioner',
@@ -50,9 +53,13 @@ const certifications = [
   },
 ]
 
+// Keep the downloadable resume path in one place so the CTA and any
+// future links stay consistent.
 const resumeFileUrl = '/SolomonSantos_CSResume-2026.pdf'
 
 const sortCertifications = (a, b) => {
+  // Surface the in-progress certification first so current growth is
+  // immediately visible.
   const rank = (status) => (status === 'In Progress' ? 0 : 1)
   return rank(a.status) - rank(b.status)
 }
@@ -61,6 +68,8 @@ function ResumePage() {
   return (
     <Stack spacing={3}>
       <RevealOnScroll delay={30}>
+        {/* Open with the downloadable resume and a visually prominent
+            certification strip. */}
         <Card elevation={0}>
           <CardContent sx={{ p: { xs: 3, md: 4 } }}>
             <Stack spacing={2}>
@@ -97,6 +106,8 @@ function ResumePage() {
                     scrollbarWidth: 'thin',
                   }}
                 >
+                  {/* Mobile uses a horizontal scroll tray while desktop
+                      spreads the credential cards into three columns. */}
                   <Box
                     sx={{
                       display: { xs: 'flex', md: 'grid' },
@@ -341,6 +352,7 @@ function ResumePage() {
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 5 }}>
           <RevealOnScroll delay={120}>
+            {/* Supporting highlights summarize the strongest role-fit points. */}
             <Card elevation={0} sx={{ height: '100%' }}>
               <CardContent>
                 <Typography variant="h6" sx={{ mb: 1.5 }}>
@@ -360,6 +372,8 @@ function ResumePage() {
 
         <Grid size={{ xs: 12, md: 7 }}>
           <RevealOnScroll delay={190}>
+            {/* The experience card keeps the narrative concise while still
+                giving hiring readers additional context. */}
             <Card elevation={0} sx={{ height: '100%' }}>
               <CardContent>
                 <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
@@ -391,4 +405,3 @@ function ResumePage() {
 }
 
 export default ResumePage
-

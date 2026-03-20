@@ -21,9 +21,11 @@ import {
 import { useTheme } from '@mui/material/styles'
 import RevealOnScroll from '../components/motion/RevealOnScroll'
 
+// Keep validation rules close to the form so input expectations are easy to trace.
 const EMAIL_REGEX = /^(?=.{6,254}$)(?=.{1,64}@)[A-Za-z0-9](?:[A-Za-z0-9._%+-]{0,62}[A-Za-z0-9])?@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/
 const PHONE_REGEX = /^\(\d{3}\)\s\d{3}-\d{4}$/
 
+// Resettable defaults for the controlled form inputs.
 const initialValues = {
   firstName: '',
   lastName: '',
@@ -33,6 +35,7 @@ const initialValues = {
 }
 
 function fireSuccessConfetti() {
+  // Respect reduced-motion preferences before triggering celebratory effects.
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     return
   }
@@ -45,6 +48,8 @@ function fireSuccessConfetti() {
 }
 
 function formatPhoneNumber(value) {
+  // Format progressively as the user types while limiting input to
+  // a standard 10-digit US phone number.
   const digits = value.replace(/\D/g, '').slice(0, 10)
 
   if (digits.length === 0) {
@@ -63,6 +68,7 @@ function formatPhoneNumber(value) {
 }
 
 function getGoogleEmbedSrc(value) {
+  // Accept either a raw URL or a pasted iframe embed snippet from Google.
   if (!value) {
     return ''
   }
@@ -76,6 +82,8 @@ function getGoogleEmbedSrc(value) {
 function ContactPage() {
   const theme = useTheme()
   const isDarkMode = theme.palette.mode === 'dark'
+  // Track form values, validation feedback, submit status, and the
+  // scheduling dialog independently so each concern stays predictable.
   const [values, setValues] = useState(initialValues)
   const [errors, setErrors] = useState({})
   const [submitState, setSubmitState] = useState({ type: '', message: '' })
@@ -86,6 +94,8 @@ function ContactPage() {
   const hasBookingOption = Boolean(appointmentEmbedSrc || appointmentUrl)
 
   const validate = () => {
+    // Validate only the required contact fields and a correctly formatted
+    // optional phone number before attempting delivery.
     const nextErrors = {}
 
     if (!values.firstName.trim()) {
@@ -110,6 +120,8 @@ function ContactPage() {
   }
 
   const handleChange = (event) => {
+    // Keep the form controlled, auto-format phone input, and clear stale
+    // field or submit-level feedback as soon as the user edits.
     const { name, value } = event.target
     const nextValue = name === 'phone' ? formatPhoneNumber(value) : value
     setValues((prev) => ({ ...prev, [name]: nextValue }))
@@ -130,6 +142,8 @@ function ContactPage() {
   const handleSubmit = async (event) => {
     event.preventDefault()
 
+    // Stop early on validation issues so the user can correct the form
+    // before any network request is attempted.
     const nextErrors = validate()
     setErrors(nextErrors)
 
@@ -138,6 +152,8 @@ function ContactPage() {
       return
     }
 
+    // Pull EmailJS configuration from environment variables so secrets
+    // and service identifiers stay out of the component source.
     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
     const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
@@ -151,6 +167,7 @@ function ContactPage() {
       return
     }
 
+    // Shape the payload to match the configured EmailJS template.
     const templateParams = {
       to_email: 'hello@solomonsantos.me',
       first_name: values.firstName.trim(),
@@ -162,6 +179,8 @@ function ContactPage() {
     }
 
     try {
+      // Lock the submit button during delivery, reset the form on success,
+      // and surface a friendly fallback on failure.
       setIsSubmitting(true)
       await emailjs.send(serviceId, templateId, templateParams, publicKey)
       setSubmitState({
@@ -183,6 +202,8 @@ function ContactPage() {
 
   return (
     <RevealOnScroll delay={40}>
+      {/* Main contact form: direct outreach first, with scheduling as a
+          secondary action when appointment settings are configured. */}
       <Card
         elevation={0}
         sx={(theme) => ({
@@ -310,6 +331,8 @@ function ContactPage() {
         </CardContent>
       </Card>
 
+      {/* Optional booking dialog embeds Google Calendar directly while
+          still offering a fallback "open in new tab" link. */}
       <Dialog
         open={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}
